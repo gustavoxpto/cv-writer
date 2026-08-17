@@ -26,3 +26,17 @@ dist/
 build/
 __pycache__/
 *.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# CV Writer personal data — real contact details + employment history, never versioned.
+# data/profile.example.yaml is the committed reference (fake data) and is explicitly kept.
+data/*
+!data/.gitkeep
+!data/profile.example.yaml
+
+# CV Writer local SQLite DB + generated CV output (personal data, spec criterion 31)
+*.sqlite3
+output/

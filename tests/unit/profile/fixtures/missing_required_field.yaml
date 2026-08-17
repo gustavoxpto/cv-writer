@@ -1,0 +1,5 @@
+# Fixture: identity.email is missing — criterion 1, error must name the field + path.
+identity:
+  name: Ana Example
+
+job_histories: []

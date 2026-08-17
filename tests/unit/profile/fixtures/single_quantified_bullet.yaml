@@ -1,0 +1,29 @@
+# Fixture: valid profile, but one history has only 1 of 3 bullets quantified —
+# load_profile() must succeed; profile_check() must warn (criterion 4).
+identity:
+  name: Ana Example
+  email: ana@example.com
+
+job_histories:
+  - id: job-one-metric
+    company: Acme Corp
+    role_title: Backend Engineer
+    country: Portugal
+    area: Engineering
+    start_date: 2020-01-15
+    end_date: 2022-06-30
+    bullets:
+      - situation: S1
+        task: T1
+        action: A1
+        result: R1
+        metric:
+          value: "+10%"
+      - situation: S2
+        task: T2
+        action: A2
+        result: R2
+      - situation: S3
+        task: T3
+        action: A3
+        result: R3

@@ -1,0 +1,24 @@
+# Fixture: a job history with only 2 bullets — below the minimum of 3 (criterion 3).
+identity:
+  name: Ana Example
+  email: ana@example.com
+
+job_histories:
+  - id: job-too-few
+    company: Acme Corp
+    role_title: Backend Engineer
+    country: Portugal
+    area: Engineering
+    start_date: 2020-01-15
+    end_date: 2022-06-30
+    bullets:
+      - situation: S1
+        task: T1
+        action: A1
+        result: R1
+        metric:
+          value: "+10%"
+      - situation: S2
+        task: T2
+        action: A2
+        result: R2
