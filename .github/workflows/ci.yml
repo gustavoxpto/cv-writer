@@ -1,0 +1,21 @@
+name: CI
+
+# Placeholder pipeline — wire up real build/test commands once src/ has a language chosen.
+# Kept intentionally minimal and permission-scoped (least-privilege token) per docs/security.md.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Placeholder test step
+        run: echo "No test runner configured yet — replace this with the real test command."

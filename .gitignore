@@ -1,0 +1,25 @@
+# Secrets — backstop only, see docs/security.md for the real control
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_rsa
+id_ed25519
+!secrets/**/*.enc.*
+
+# OS
+desktop.ini
+Thumbs.db
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+
+# Dependencies / build output (uncomment/extend once a language is chosen)
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
