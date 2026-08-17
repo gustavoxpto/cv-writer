@@ -8,6 +8,9 @@ id_rsa
 id_ed25519
 !secrets/**/*.enc.*
 
+# Personal local Claude Code overrides (per-machine, not team config)
+.claude/settings.local.json
+
 # OS
 desktop.ini
 Thumbs.db
