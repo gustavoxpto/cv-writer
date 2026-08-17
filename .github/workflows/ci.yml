@@ -1,7 +1,10 @@
 name: CI
 
-# Placeholder pipeline — wire up real build/test commands once src/ has a language chosen.
+# Runs lint + tests for the Python code under src/ (see specs/features/001-cv-writer.md).
 # Kept intentionally minimal and permission-scoped (least-privilege token) per docs/security.md.
+# Full CI parity (coverage across all slices, DB/browser-dependent integration tests) lands
+# incrementally as those slices land — criterion 36 names slice 5 as where this workflow is
+# considered "done", but there's no reason to leave it as a no-op while real tests exist.
 
 on:
   pull_request:
@@ -17,5 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Placeholder test step
-        run: echo "No test runner configured yet — replace this with the real test command."
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -e ".[dev]"
+      - name: Lint (ruff)
+        run: ruff check src tests
+      - name: Test (pytest)
+        run: pytest tests/unit tests/integration -q

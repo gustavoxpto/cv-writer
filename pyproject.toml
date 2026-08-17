@@ -1,0 +1,33 @@
+[project]
+name = "cv-writer"
+version = "0.1.0"
+description = "Turn a job posting into a truthful, well-matched CV — see specs/features/001-cv-writer.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2,<3",
+    "PyYAML>=6,<7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8,<9",
+    "ruff>=0.6,<1",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

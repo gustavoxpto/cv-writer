@@ -1,0 +1,40 @@
+# Fixture: a job history with 6 bullets — above the maximum of 5 (criterion 3).
+identity:
+  name: Ana Example
+  email: ana@example.com
+
+job_histories:
+  - id: job-too-many
+    company: Acme Corp
+    role_title: Backend Engineer
+    country: Portugal
+    area: Engineering
+    start_date: 2020-01-15
+    end_date: 2022-06-30
+    bullets:
+      - situation: S1
+        task: T1
+        action: A1
+        result: R1
+        metric:
+          value: "+10%"
+      - situation: S2
+        task: T2
+        action: A2
+        result: R2
+      - situation: S3
+        task: T3
+        action: A3
+        result: R3
+      - situation: S4
+        task: T4
+        action: A4
+        result: R4
+      - situation: S5
+        task: T5
+        action: A5
+        result: R5
+      - situation: S6
+        task: T6
+        action: A6
+        result: R6
