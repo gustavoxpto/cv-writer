@@ -21,6 +21,11 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+# Migration SQL scripts (ADR 0002) must ship with the package, not just work under an
+# editable install where src/ is read directly.
+cv_writer = ["db/migrations/*.sql"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"
