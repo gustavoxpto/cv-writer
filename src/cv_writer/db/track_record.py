@@ -96,6 +96,18 @@ def insert_application(conn: sqlite3.Connection, application: Application) -> in
     return application_id
 
 
+def get_application(conn: sqlite3.Connection, application_id: int) -> Application | None:
+    """One application by id, or None if it doesn't exist. The read half of
+    insert_application() that no earlier slice needed — slice 5's per-application result page
+    (criterion 32: download links) and the download route (criterion 32, guarded per ADR 0005
+    decision 7) both need to look up a single application by the id the user is browsing to,
+    not the whole filtered/sorted list list_applications() returns."""
+    row = conn.execute("SELECT * FROM applications WHERE id = ?", (application_id,)).fetchone()
+    if row is None:
+        return None
+    return _row_to_application(conn, row)
+
+
 def list_applications(
     conn: sqlite3.Connection,
     *,

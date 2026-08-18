@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CV Writer — page count for {{ draft.company }}</title>
+</head>
+<body>
+<h1>Choose a page count — {{ draft.company }} / {{ draft.role_title }}</h1>
+
+{% if page_fit.achieved_one_page %}
+<p>The one-page version keeps everything — nothing was dropped.</p>
+{% else %}
+<p>The one-page version could not fit everything even at the minimum bullet floor; it still
+   reports {{ page_fit.page_count }} page(s) if you choose "1 page".</p>
+{% endif %}
+
+<h2>1 page — kept</h2>
+<ul>
+{% for source_id in page_fit.fitted_source_ids %}
+  <li>{{ bullets_by_id.get(source_id, source_id) }}</li>
+{% endfor %}
+</ul>
+
+<h2>1 page — dropped</h2>
+{% if page_fit.dropped_source_ids %}
+<ul>
+{% for source_id in page_fit.dropped_source_ids %}
+  <li>{{ bullets_by_id.get(source_id, source_id) }}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>Nothing dropped.</p>
+{% endif %}
+
+<h2>2 pages — everything kept</h2>
+<ul>
+{% for source_id in draft.generated_cv.source_ids_used %}
+  <li>{{ bullets_by_id.get(source_id, source_id) }}</li>
+{% endfor %}
+</ul>
+
+<form method="post" action="/drafts/{{ draft.id }}/confirm">
+  <label><input type="radio" name="page_count" value="1" checked> 1 page</label><br>
+  <label><input type="radio" name="page_count" value="2"> 2 pages</label><br>
+  <button type="submit">Generate artifacts and save application</button>
+</form>
+</body>
+</html>

@@ -31,9 +31,9 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [tool.setuptools.package-data]
-# Migration SQL scripts (ADR 0002) must ship with the package, not just work under an
-# editable install where src/ is read directly.
-cv_writer = ["db/migrations/*.sql"]
+# Migration SQL scripts (ADR 0002) and the web UI's Jinja templates (ADR 0005) must ship with
+# the package, not just work under an editable install where src/ is read directly.
+cv_writer = ["db/migrations/*.sql", "web/templates/*.jinja"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
