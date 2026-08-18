@@ -145,12 +145,20 @@ def test_seniority_does_not_count_a_gap_between_jobs_as_experience():
     # Regression: two 1-year jobs eight years apart is 2 real years of experience, not the
     # ~10-year span between the earliest start and the latest end.
     from datetime import date
+    from itertools import count
 
     from cv_writer.profile.models import Bullet, Identity, JobHistory, Metric, Profile
 
+    ids = count(1)
+
     def bullet(text):
         return Bullet(
-            situation=text, task=text, action=text, result=text, metric=Metric(value="+1", unit="x")
+            id=f"b{next(ids)}",
+            situation=text,
+            task=text,
+            action=text,
+            result=text,
+            metric=Metric(value="+1", unit="x"),
         )
 
     early_job = JobHistory(

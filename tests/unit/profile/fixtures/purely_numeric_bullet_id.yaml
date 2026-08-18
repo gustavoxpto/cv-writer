@@ -1,0 +1,34 @@
+# Fixture: a bullet id that is purely digits — must fail validation. A code-review pass found
+# that such an id silently coerces to SQLite's INTEGER storage class in
+# application_bullet_sources.profile_bullet_id (declared INTEGER, ADR 0004 decision 1),
+# corrupting round-trip reads and risking an IntegrityError against a colliding id like "042".
+identity:
+  name: Ana Example
+  email: ana@example.com
+
+job_histories:
+  - id: job-real
+    company: Acme Corp
+    role_title: Backend Engineer
+    country: Portugal
+    area: Engineering
+    start_date: 2020-01-15
+    end_date: 2022-06-30
+    bullets:
+      - id: "42"
+        situation: S1
+        task: T1
+        action: A1
+        result: R1
+        metric:
+          value: "+10%"
+      - id: job-real-b2
+        situation: S2
+        task: T2
+        action: A2
+        result: R2
+      - id: job-real-b3
+        situation: S3
+        task: T3
+        action: A3
+        result: R3

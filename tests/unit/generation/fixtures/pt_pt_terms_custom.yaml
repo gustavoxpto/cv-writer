@@ -1,0 +1,10 @@
+# Fixture: a term list with one custom entry not in the shipped pt_pt_terms.yaml — proves
+# the checker is extendable via data alone, no code change (criterion 21).
+version: 1
+entries:
+  - id: custom-entry
+    category: lexis
+    pattern: "customizada"
+    is_regex: false
+    replacement: "personalizada"
+    note: "Fixture-only entry for test_load_pt_pt_terms_picks_up_a_custom_fixture_entry."

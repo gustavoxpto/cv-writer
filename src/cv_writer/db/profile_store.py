@@ -114,11 +114,12 @@ def _insert_job_histories_and_bullets(conn: sqlite3.Connection, profile: Profile
             conn.execute(
                 """
                 INSERT INTO bullets
-                    (job_history_id, position, situation, task, action, result,
+                    (bullet_id, job_history_id, position, situation, task, action, result,
                      metric_value, metric_unit, metric_baseline)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
+                    bullet.id,
                     history.id,
                     position,
                     bullet.situation,

@@ -29,7 +29,8 @@ job_histories:
     start_date: 2020-01-15
     end_date: 2022-06-30
     bullets:
-      - situation: Checkout API had frequent timeouts under peak load.
+      - id: job-acme-2020-b1
+        situation: Checkout API had frequent timeouts under peak load.
         task: Bring p99 latency under the 500ms SLA.
         action: Profiled the request path and added a read-through cache for product lookups.
         result: Cut p99 latency from 1.4s to 320ms.
@@ -37,14 +38,16 @@ job_histories:
           value: "-77%"
           unit: p99 latency
           baseline: "from 1.4s to 320ms"
-      - situation: Deploys required a manual 45-minute runbook.
+      - id: job-acme-2020-b2
+        situation: Deploys required a manual 45-minute runbook.
         task: Make deploys safe enough to run without a human babysitting them.
         action: Wrote a CI pipeline with automated smoke tests and one-click rollback.
         result: Deploys became a single click, run several times a day.
         metric:
           value: "45min -> ~2min"
           unit: deploy time
-      - situation: New hires took weeks to make their first production change.
+      - id: job-acme-2020-b3
+        situation: New hires took weeks to make their first production change.
         task: Shorten onboarding time for backend engineers.
         action: Wrote an onboarding guide and pairing checklist for the backend team.
         result: New hires shipped a first change noticeably faster.
@@ -57,25 +60,29 @@ job_histories:
     start_date: 2022-07-01
     end_date: present
     bullets:
-      - situation: The team had no shared way to evidence CV claims with real numbers.
+      - id: job-globex-2022-b1
+        situation: The team had no shared way to evidence CV claims with real numbers.
         task: Build a system to turn job postings into tailored, truthful CVs.
         action: Designed a profile schema with STAR bullets and per-history metrics.
         result: Every job history now carries at least one quantified achievement.
         metric:
           value: "100%"
           unit: histories with a metric
-      - situation: Support tickets about slow search were piling up.
+      - id: job-globex-2022-b2
+        situation: Support tickets about slow search were piling up.
         task: Reduce search latency without a full re-architecture.
         action: Added a caching layer in front of the search index.
         result: Search latency dropped noticeably and ticket volume fell.
         metric:
           value: "-60%"
           unit: search latency
-      - situation: Onboarding a new microservice took a full sprint.
+      - id: job-globex-2022-b3
+        situation: Onboarding a new microservice took a full sprint.
         task: Cut the time to stand up a new service.
         action: Built a service template with CI, health checks, and logging pre-wired.
         result: New services now ship in about a day.
-      - situation: Incident reviews were inconsistent across teams.
+      - id: job-globex-2022-b4
+        situation: Incident reviews were inconsistent across teams.
         task: Standardize how incidents get reviewed and written up.
         action: Introduced a shared postmortem template and a weekly review meeting.
         result: Postmortems now happen consistently and are used to drive follow-ups.

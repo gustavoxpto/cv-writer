@@ -33,7 +33,7 @@ def _application(**overrides) -> Application:
         pdf_path="output/2026-01-10-acme-backend-engineer.pdf",
         text_path="output/2026-01-10-acme-backend-engineer.txt",
         skills_featured=["Python", "SQL"],
-        profile_bullet_ids=[1, 2, 3],
+        profile_bullet_ids=["job-acme-2020-b1", "job-acme-2020-b2", "job-acme-2020-b3"],
     )
     defaults.update(overrides)
     return Application(**defaults)
@@ -105,7 +105,7 @@ def test_insert_application_persists_all_required_fields(tmp_path):
             (app_id,),
         )
     }
-    assert bullet_ids == {1, 2, 3}
+    assert bullet_ids == {"job-acme-2020-b1", "job-acme-2020-b2", "job-acme-2020-b3"}
 
 
 def test_insert_application_accepts_pasted_source_and_missing_tier(tmp_path):
@@ -130,7 +130,7 @@ def test_list_applications_round_trips_through_the_model(tmp_path):
     assert listed.company == "Acme Corp"
     assert listed.application_date == date(2026, 1, 10)
     assert listed.skills_featured == ["Python", "SQL"]
-    assert listed.profile_bullet_ids == [1, 2, 3]
+    assert listed.profile_bullet_ids == ["job-acme-2020-b1", "job-acme-2020-b2", "job-acme-2020-b3"]
     assert listed.id is not None
 
 
