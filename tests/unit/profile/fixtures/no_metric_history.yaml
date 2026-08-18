@@ -12,15 +12,18 @@ job_histories:
     start_date: 2020-01-15
     end_date: 2022-06-30
     bullets:
-      - situation: S1
+      - id: job-no-metric-b1
+        situation: S1
         task: T1
         action: A1
         result: R1
-      - situation: S2
+      - id: job-no-metric-b2
+        situation: S2
         task: T2
         action: A2
         result: R2
-      - situation: S3
+      - id: job-no-metric-b3
+        situation: S3
         task: T3
         action: A3
         result: R3

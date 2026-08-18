@@ -18,10 +18,13 @@ class MatchStatus(str, Enum):
 class EvidenceBullet(BaseModel):
     """One profile bullet ranked as evidence for a requirement (criterion 16).
 
-    Identified by `(history_id, bullet_index)` rather than a bullet id — `Bullet` has no
-    stable id of its own yet (flagged in the slice-2 pairing note as an open point for slice
-    4, when generation needs to cite "the id of the profile bullet a CV line was derived
-    from"). `bullet_index` is the bullet's position within `JobHistory.bullets`.
+    Identified by `(history_id, bullet_index)` — a *ranking candidate*, not a citation.
+    `Bullet` gained a real, stable `id` field in slice 4 (ADR 0004 decision 1), but this
+    model is deliberately left as-is rather than switched over to it: `bullet_index` is what
+    `rank_evidence_bullets()`/`select_bullets_within_budget()` (ranking.py) actually need to
+    index back into `JobHistory.bullets`, and slice 4's `generation/source_ids.py` is the one
+    place that turns one of these into a citable id (`bullet_source_id()`), keeping that
+    concept at the boundary where it's actually needed rather than here.
     """
 
     history_id: str

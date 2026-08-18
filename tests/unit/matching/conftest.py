@@ -4,14 +4,20 @@ functions under test are pure (criteria 13-16)."""
 from __future__ import annotations
 
 from datetime import date
+from itertools import count
 
 import pytest
 
 from cv_writer.profile.models import Bullet, Identity, JobHistory, Language, Metric, Profile, Skill
 
+_bullet_ids = count(1)  # module-scoped: guarantees globally-unique ids across both histories
+# built by the `profile` fixture below, matching Profile's own global bullet-id-uniqueness
+# validator (ADR 0004 decision 1) without every call site needing to hand-pick one.
+
 
 def _bullet(text: str, *, metric: Metric | None = None) -> Bullet:
     return Bullet(
+        id=f"test-bullet-{next(_bullet_ids)}",
         situation=f"{text} — situation",
         task=f"{text} — task",
         action=f"{text} — action, using Python and SQL daily",

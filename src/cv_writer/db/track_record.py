@@ -2,9 +2,13 @@
 
 `Application` is the one record of a generated application: date, company, country, area,
 role, ingestion source/tier, match score, output language, page count, skills featured, output
-artifact paths, and the profile-bullet ids the CV was built from (criterion 29). No generation
-pipeline calls this yet (slice 4) — insert_application()/list_applications() are exercised
-directly against constructed records for now, per the spec's own slice ordering.
+artifact paths, and the profile-bullet ids the CV was built from (criterion 29).
+`generation/build_application.py` (slice 4) is the first caller that actually populates a full
+`Application` from a real pipeline run; the caller still owns calling insert_application() itself
+(generation stays DB-agnostic, see ADR 0004 / generation/build_application.py's docstring).
+
+`profile_bullet_ids` is `list[str]`, matching Bullet.id (ADR 0004 decision 1) — not the earlier
+`list[int]`, which would have meant the database's own unstable AUTOINCREMENT surrogate key.
 
 Skills and bullet-source ids are stored in their own join tables (application_skills,
 application_bullet_sources) rather than as a serialized blob column, so criterion 30's "sorted
@@ -46,7 +50,7 @@ class Application(BaseModel):
     pdf_path: str | None = None
     text_path: str | None = None
     skills_featured: list[str] = Field(default_factory=list)
-    profile_bullet_ids: list[int] = Field(default_factory=list)
+    profile_bullet_ids: list[str] = Field(default_factory=list)
 
 
 def insert_application(conn: sqlite3.Connection, application: Application) -> int:

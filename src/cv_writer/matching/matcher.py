@@ -15,6 +15,7 @@ from datetime import date
 from cv_writer.ingestion.models import Requirement, RequirementKind, RequirementSet
 from cv_writer.ingestion.requirements import word_boundary_pattern
 from cv_writer.profile.models import Profile
+from cv_writer.profile.proficiency import WORKING_PROFICIENCY_LEVELS
 
 from .models import MatchReport, MatchStatus, RequirementMatch
 from .ranking import rank_evidence_bullets
@@ -56,19 +57,6 @@ _SENIORITY_MIN_YEARS: dict[str, float] = {
     "director": 8.0,
 }
 
-# Proficiency labels treated as "working proficiency" for language matching. Mirrors the idea
-# criterion 20 will later gate CV generation on, but this list is only an approximate signal
-# for the match report — criterion 20 owns the authoritative check in slice 4.
-_WORKING_PROFICIENCY_LEVELS = {
-    "native",
-    "fluent",
-    "working",
-    "professional",
-    "advanced",
-    "c1",
-    "c2",
-    "full professional",
-}
 
 # Requirement values that name a specific regional variant, and the markers a profile language
 # name must contain to count as evidence for that variant specifically. A generic "Portuguese"
@@ -246,7 +234,7 @@ def _match_language(profile: Profile, requirement: Requirement) -> RequirementMa
             )
     status = (
         MatchStatus.MATCHED
-        if found.proficiency.lower() in _WORKING_PROFICIENCY_LEVELS
+        if found.proficiency.lower() in WORKING_PROFICIENCY_LEVELS
         else MatchStatus.PARTIAL
     )
     return RequirementMatch(

@@ -1,0 +1,31 @@
+# Fixture: a bullet with no id — must fail, naming the field + path (criterion 1's guarantee
+# extended to the new Bullet.id field, see ADR 0004 decision 1).
+identity:
+  name: Ana Example
+  email: ana@example.com
+
+job_histories:
+  - id: job-real
+    company: Acme Corp
+    role_title: Backend Engineer
+    country: Portugal
+    area: Engineering
+    start_date: 2020-01-15
+    end_date: 2022-06-30
+    bullets:
+      - situation: S1
+        task: T1
+        action: A1
+        result: R1
+        metric:
+          value: "+10%"
+      - id: job-real-b2
+        situation: S2
+        task: T2
+        action: A2
+        result: R2
+      - id: job-real-b3
+        situation: S3
+        task: T3
+        action: A3
+        result: R3

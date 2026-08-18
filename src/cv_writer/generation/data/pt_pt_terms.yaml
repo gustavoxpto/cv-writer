@@ -1,0 +1,64 @@
+# Versioned, data-driven brasileirismos term/pattern list (spec criterion 21, ADR 0004
+# decision 6). Extending this list is a YAML edit + a `version` bump — no code change needed.
+# Bump `version` whenever an entry is added, changed, or removed; a unit test asserts this
+# field is present and an int so a forgotten bump fails loudly, not silently.
+#
+# `category` is informational (lexis | progressive | clitic | orthography) — it doesn't
+# change matching behavior, just documents what kind of brasileirismo each entry catches.
+# `is_regex: false` entries are matched via ingestion.requirements.word_boundary_pattern()
+# (one shared boundary-regex implementation across the codebase); `is_regex: true` entries
+# are compiled directly with re.IGNORECASE.
+version: 1
+entries:
+  - id: celular-telemovel
+    category: lexis
+    pattern: "celular"
+    is_regex: false
+    replacement: "telemóvel"
+    note: "BR-only lexis for 'mobile phone'."
+  - id: time-equipa
+    category: lexis
+    # Regex, not a plain word-boundary term: a code-review pass found that a plain "time"
+    # entry flagged English tech jargon like "real-time"/"part-time"/"full-time" (word_
+    # boundary_pattern treats a hyphen as a boundary too, so "time" inside those hyphenated
+    # compounds still counted as a "word"). The lookbehind/lookahead exclude an immediately
+    # adjacent hyphen so those compounds pass, while "do time de engenharia" (surrounded by
+    # spaces) still correctly flags. Residual limitation: an unhyphenated "part time"/"full
+    # time" (space instead of hyphen) still false-positives — narrower than solving this
+    # properly would need, flagged for the PT-PT checker's own "ceiling" open question.
+    pattern: "(?<!-)\\btime\\b(?!-)"
+    is_regex: true
+    replacement: "equipa"
+    note: "BR-only lexis for 'team' (PT-PT: equipa)."
+  - id: arquivo-ficheiro
+    category: lexis
+    pattern: "arquivo"
+    is_regex: false
+    replacement: "ficheiro"
+    note: "BR-only lexis for 'file' (PT-PT: ficheiro)."
+  - id: tela-ecra
+    category: lexis
+    pattern: "tela"
+    is_regex: false
+    replacement: "ecrã"
+    note: "BR-only lexis for 'screen' (PT-PT: ecrã)."
+  - id: gerenciar-gerir
+    category: lexis
+    pattern: "gerenciar"
+    is_regex: false
+    replacement: "gerir"
+    note: "BR-only lexis for 'to manage' (PT-PT: gerir)."
+  - id: planejamento-planeamento
+    category: lexis
+    pattern: "planejamento"
+    is_regex: false
+    replacement: "planeamento"
+    note: "BR-preferred spelling for 'planning' (PT-PT: planeamento)."
+  - id: gerundio-progressive
+    category: progressive
+    pattern: "\\b(estou|estás|está|estamos|estão|estar|estava|estavas|estávamos|estavam)\\b(?:\\s+\\w+){0,2}\\s+\\w+ndo\\b"
+    is_regex: true
+    replacement: "estar a + infinitivo (e.g. 'estar a gerir', not 'estar gerenciando')"
+    note: >
+      BR progressive tense (estar + gerúndio, e.g. 'estamos gerenciando'); PT-PT uses
+      estar a + infinitivo instead (e.g. 'estamos a gerir').

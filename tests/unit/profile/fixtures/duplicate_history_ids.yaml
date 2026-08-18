@@ -12,17 +12,20 @@ job_histories:
     start_date: 2020-01-15
     end_date: 2021-01-15
     bullets:
-      - situation: S1
+      - id: job-dup-1-b1
+        situation: S1
         task: T1
         action: A1
         result: R1
         metric:
           value: "+10%"
-      - situation: S2
+      - id: job-dup-1-b2
+        situation: S2
         task: T2
         action: A2
         result: R2
-      - situation: S3
+      - id: job-dup-1-b3
+        situation: S3
         task: T3
         action: A3
         result: R3
@@ -34,17 +37,20 @@ job_histories:
     start_date: 2021-02-01
     end_date: present
     bullets:
-      - situation: S1
+      - id: job-dup-2-b1
+        situation: S1
         task: T1
         action: A1
         result: R1
         metric:
           value: "+10%"
-      - situation: S2
+      - id: job-dup-2-b2
+        situation: S2
         task: T2
         action: A2
         result: R2
-      - situation: S3
+      - id: job-dup-2-b3
+        situation: S3
         task: T3
         action: A3
         result: R3

@@ -20,11 +20,16 @@ def test_rank_evidence_bullets_prefers_more_recent_histories(profile):
 
 def test_rank_evidence_bullets_prefers_relevance_over_recency():
     from datetime import date
+    from itertools import count
 
     from cv_writer.profile.models import Bullet, Identity, JobHistory, Metric, Profile
 
+    ids = count(1)
+
     def bullet(text, metric=None):
-        return Bullet(situation=text, task=text, action=text, result=text, metric=metric)
+        return Bullet(
+            id=f"b{next(ids)}", situation=text, task=text, action=text, result=text, metric=metric
+        )
 
     older = JobHistory(
         id="older",
@@ -70,11 +75,16 @@ def test_rank_evidence_bullets_uses_word_boundaries_not_plain_substrings():
     # Regression: plain substring counting made a bullet mentioning "reactive" score as
     # relevant to skill_value="react", even though it never mentions React.
     from datetime import date
+    from itertools import count
 
     from cv_writer.profile.models import Bullet, Identity, JobHistory, Metric, Profile
 
+    ids = count(1)
+
     def bullet(text, metric=None):
-        return Bullet(situation=text, task=text, action=text, result=text, metric=metric)
+        return Bullet(
+            id=f"b{next(ids)}", situation=text, task=text, action=text, result=text, metric=metric
+        )
 
     history = JobHistory(
         id="job",

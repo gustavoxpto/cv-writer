@@ -1,0 +1,58 @@
+# Fixture: two bullets across different job histories share the same id — must fail
+# validation, naming the id (criterion 18's "the id of the profile bullet" only works if
+# bullet ids are unique across the whole profile, not just within one history).
+identity:
+  name: Ana Example
+  email: ana@example.com
+
+job_histories:
+  - id: job-a
+    company: Acme Corp
+    role_title: Backend Engineer
+    country: Portugal
+    area: Engineering
+    start_date: 2020-01-15
+    end_date: 2021-01-15
+    bullets:
+      - id: shared-bullet-id
+        situation: S1
+        task: T1
+        action: A1
+        result: R1
+        metric:
+          value: "+10%"
+      - id: job-a-b2
+        situation: S2
+        task: T2
+        action: A2
+        result: R2
+      - id: job-a-b3
+        situation: S3
+        task: T3
+        action: A3
+        result: R3
+  - id: job-b
+    company: Globex
+    role_title: Senior Backend Engineer
+    country: Portugal
+    area: Engineering
+    start_date: 2021-02-01
+    end_date: present
+    bullets:
+      - id: shared-bullet-id
+        situation: S1
+        task: T1
+        action: A1
+        result: R1
+        metric:
+          value: "+10%"
+      - id: job-b-b2
+        situation: S2
+        task: T2
+        action: A2
+        result: R2
+      - id: job-b-b3
+        situation: S3
+        task: T3
+        action: A3
+        result: R3

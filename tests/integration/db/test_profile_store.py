@@ -32,6 +32,23 @@ def test_load_profile_into_db_populates_identity_histories_bullets_skills(tmp_pa
     assert skill_count == len(profile.skills)
 
 
+def test_load_profile_into_db_populates_the_stable_bullet_id(tmp_path):
+    # Migration 0002 / ADR 0004 decision 1: bullets.bullet_id is the stable citation key
+    # (unlike bullets.id, the AUTOINCREMENT surrogate, which changes on every reload).
+    profile = load_profile(FIXTURES / "valid_profile.yaml")
+    conn = connect(tmp_path / "cv_writer.sqlite3")
+
+    load_profile_into_db(profile, conn)
+
+    stored_ids = {
+        row["bullet_id"] for row in conn.execute("SELECT bullet_id FROM bullets")
+    }
+    expected_ids = {
+        bullet.id for history in profile.job_histories for bullet in history.bullets
+    }
+    assert stored_ids == expected_ids
+
+
 def test_reloading_the_same_profile_is_idempotent_no_duplicate_rows(tmp_path):
     profile = load_profile(FIXTURES / "valid_profile.yaml")
     conn = connect(tmp_path / "cv_writer.sqlite3")
