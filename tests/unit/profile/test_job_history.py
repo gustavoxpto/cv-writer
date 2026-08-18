@@ -35,3 +35,10 @@ def test_duplicate_job_history_ids_fail_validation():
         load_profile(FIXTURES / "duplicate_history_ids.yaml")
 
     assert "job-dup" in str(exc_info.value)
+
+
+def test_end_date_before_start_date_fails_validation():
+    with pytest.raises(ProfileValidationError) as exc_info:
+        load_profile(FIXTURES / "inverted_date_range.yaml")
+
+    assert "job-inverted-dates" in str(exc_info.value)

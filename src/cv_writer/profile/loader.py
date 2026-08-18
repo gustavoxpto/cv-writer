@@ -27,6 +27,13 @@ def load_profile(path: str | Path) -> Profile:
         raw_text = path.read_text(encoding="utf-8")
     except OSError as exc:
         raise ProfileValidationError(f"could not read profile at {path}: {exc}") from exc
+    except UnicodeDecodeError as exc:
+        # A hand-edited profile.yaml saved by an editor that isn't UTF-8-aware (e.g. cp1252,
+        # common on non-UTF-8-locale Windows setups) raises UnicodeDecodeError, not OSError —
+        # must still surface as a clear ProfileValidationError, never a raw traceback.
+        raise ProfileValidationError(
+            f"could not read profile at {path}: not valid UTF-8 ({exc})"
+        ) from exc
 
     return _load_profile_text(raw_text, source=str(path))
 

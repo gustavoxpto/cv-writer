@@ -40,7 +40,10 @@ def profile_check(profile: Profile) -> list[CheckWarning]:
 
     for history in profile.job_histories:
         quantified_count = sum(1 for bullet in history.bullets if bullet.metric is not None)
-        if len(history.bullets) > 1 and quantified_count == 1:
+        # No need to also guard on len(history.bullets) > 1: the schema (MIN_BULLETS_PER_HISTORY
+        # in models.py) already requires 3-5 bullets per history, so "exactly one quantified"
+        # is meaningful on its own here.
+        if quantified_count == 1:
             warnings.append(
                 CheckWarning(
                     kind="single_quantified_bullet",
