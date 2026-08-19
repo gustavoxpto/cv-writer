@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CV Writer — track record</title>
+</head>
+<body>
+<h1>Track record</h1>
+<p><a href="/">New application</a></p>
+
+{% if sort_error %}
+<p class="error">{{ sort_error }}</p>
+{% endif %}
+
+<form method="get" action="/applications">
+  <label>Company <input type="text" name="company" value="{{ filters.company }}"></label>
+  <label>Country <input type="text" name="country" value="{{ filters.country }}"></label>
+  <label>Area <input type="text" name="area" value="{{ filters.area }}"></label>
+  <label>Skill <input type="text" name="skill" value="{{ filters.skill }}"></label>
+  <label>Sort by
+    <select name="sort_by">
+      <option value="date" {% if filters.sort_by == "date" %}selected{% endif %}>Date</option>
+      <option value="application_date" {% if filters.sort_by == "application_date" %}selected{% endif %}>Date (application_date)</option>
+      <option value="company" {% if filters.sort_by == "company" %}selected{% endif %}>Company</option>
+      <option value="country" {% if filters.sort_by == "country" %}selected{% endif %}>Country</option>
+      <option value="area" {% if filters.sort_by == "area" %}selected{% endif %}>Area</option>
+    </select>
+  </label>
+  <label>Order
+    <select name="descending">
+      <option value="true" {% if filters.descending %}selected{% endif %}>Descending</option>
+      <option value="false" {% if not filters.descending %}selected{% endif %}>Ascending</option>
+    </select>
+  </label>
+  <button type="submit">Filter</button>
+</form>
+
+<table>
+<thead>
+<tr><th>Date</th><th>Company</th><th>Country</th><th>Area</th><th>Role</th><th>Score</th><th>Pages</th><th></th></tr>
+</thead>
+<tbody>
+{% for application in applications %}
+<tr>
+  <td>{{ application.application_date }}</td>
+  <td>{{ application.company }}</td>
+  <td>{{ application.country }}</td>
+  <td>{{ application.area }}</td>
+  <td>{{ application.role_title }}</td>
+  <td>{{ application.match_score }}</td>
+  <td>{{ application.page_count }}</td>
+  <td><a href="/applications/{{ application.id }}">View</a></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</body>
+</html>

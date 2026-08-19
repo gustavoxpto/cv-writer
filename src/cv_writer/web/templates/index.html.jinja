@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CV Writer</title>
+</head>
+<body>
+<h1>CV Writer — new application</h1>
+
+{% if ingestion_error %}
+<p class="error">Could not fetch that URL: {{ ingestion_error }}. Try pasting the posting text instead.</p>
+{% endif %}
+{% if paste_error %}
+<p class="error">{{ paste_error }}</p>
+{% endif %}
+
+<section>
+<h2>Ingest from a URL</h2>
+<form method="post" action="/drafts">
+  <label>Posting URL
+    <input type="url" name="url" value="{{ prefill.url if prefill else '' }}" required>
+  </label><br>
+  <label>Company
+    <input type="text" name="company" value="{{ prefill.company if prefill else '' }}" required>
+  </label><br>
+  <label>Country
+    <input type="text" name="country" value="{{ prefill.country if prefill else '' }}" required>
+  </label><br>
+  <label>Area / department
+    <input type="text" name="area" value="{{ prefill.area if prefill else '' }}" required>
+  </label><br>
+  <label>Role title
+    <input type="text" name="role_title" value="{{ prefill.role_title if prefill else '' }}" required>
+  </label><br>
+  <button type="submit">Fetch posting</button>
+</form>
+</section>
+
+<section>
+<h2>Or paste the posting text</h2>
+<form method="post" action="/drafts/paste">
+  <label>Posting text<br>
+    <textarea name="text" rows="10" cols="60" required>{{ prefill.text if prefill else '' }}</textarea>
+  </label><br>
+  <label>Company
+    <input type="text" name="company" value="{{ prefill.company if prefill else '' }}" required>
+  </label><br>
+  <label>Country
+    <input type="text" name="country" value="{{ prefill.country if prefill else '' }}" required>
+  </label><br>
+  <label>Area / department
+    <input type="text" name="area" value="{{ prefill.area if prefill else '' }}" required>
+  </label><br>
+  <label>Role title
+    <input type="text" name="role_title" value="{{ prefill.role_title if prefill else '' }}" required>
+  </label><br>
+  <button type="submit">Use pasted text</button>
+</form>
+</section>
+
+<p><a href="/applications">Browse the track record</a></p>
+</body>
+</html>

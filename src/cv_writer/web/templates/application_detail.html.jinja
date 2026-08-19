@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CV Writer — {{ application.company }} / {{ application.role_title }}</title>
+</head>
+<body>
+<h1>{{ application.company }} — {{ application.role_title }}</h1>
+<p>{{ application.country }} / {{ application.area }} — applied {{ application.application_date }}</p>
+<p>Source: {{ application.source }} (ingestion tier {{ application.ingestion_tier }})</p>
+<p>Match score: {{ application.match_score }} — language: {{ application.output_language }} — pages: {{ application.page_count }}</p>
+
+<h2>Skills featured</h2>
+<ul>
+{% for skill in application.skills_featured %}
+  <li>{{ skill }}</li>
+{% endfor %}
+</ul>
+
+<h2>Downloads</h2>
+<ul>
+  <li><a href="/applications/{{ application.id }}/download/markdown">Markdown</a></li>
+  <li><a href="/applications/{{ application.id }}/download/pdf">PDF</a></li>
+  <li><a href="/applications/{{ application.id }}/download/text">Plain text</a></li>
+</ul>
+
+<p><a href="/applications">Back to track record</a></p>
+</body>
+</html>

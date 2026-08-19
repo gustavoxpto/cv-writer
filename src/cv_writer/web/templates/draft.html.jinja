@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CV Writer — {{ draft.company }} / {{ draft.role_title }}</title>
+</head>
+<body>
+<h1>{{ draft.company }} — {{ draft.role_title }}</h1>
+<p>{{ draft.country }} / {{ draft.area }} — source: {{ draft.posting.source }} (ingestion tier {{ draft.posting.ingestion_tier }})</p>
+
+<section>
+<h2>Match report</h2>
+<p>Score: {{ match_report.score }} / 100</p>
+<p class="score-formula">{{ match_report.score_formula }}</p>
+
+<h3>Requirements</h3>
+<ul>
+{% for match in match_report.matches %}
+  <li>[{{ match.status.value }}] {{ match.requirement.kind.value }}: {{ match.requirement.value }}
+    {% if match.note %}— {{ match.note }}{% endif %}
+  </li>
+{% endfor %}
+</ul>
+
+<h3>Gaps</h3>
+{% if gaps %}
+<ul>
+{% for gap in gaps %}
+  <li>[{{ gap.status.value }}] {{ gap.requirement.value }}{% if gap.note %} — {{ gap.note }}{% endif %}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>No gaps — every requirement matched.</p>
+{% endif %}
+</section>
+
+<section>
+<h2>Language</h2>
+<p>Detected: {{ detection.language }} (confidence: {{ detection.confidence }})</p>
+</section>
+
+<section>
+<h2>Extra input</h2>
+{% if extra_input_error %}
+<p class="error">{{ extra_input_error }}</p>
+{% endif %}
+<ul>
+{% for extra in draft.extra_inputs %}
+  <li>[{{ extra.id }}] ({{ extra.kind.value }}) {{ extra.text }}</li>
+{% endfor %}
+</ul>
+<form method="post" action="/drafts/{{ draft.id }}/inputs">
+  <label>Kind
+    <select name="kind">
+      <option value="cover_note_angle">Cover note angle</option>
+      <option value="achievement">Achievement not yet in the profile</option>
+      <option value="emphasis">Emphasis instructions</option>
+    </select>
+  </label><br>
+  <label>Text<br><textarea name="text" rows="3" cols="60" required></textarea></label><br>
+  <label><input type="checkbox" name="promote_candidate" value="true"> Consider promoting this into data/profile.yaml</label><br>
+  <button type="submit">Add extra input</button>
+</form>
+</section>
+
+{% if generation_failure %}
+<section class="error">
+<h2>Generation failed</h2>
+<p>{{ generation_failure.reason }}</p>
+{% if generation_failure.validation_failures %}
+<h3>Validation failures</h3>
+<ul>
+{% for failure in generation_failure.validation_failures %}
+  <li>{{ failure.reason }} — offending line: "{{ failure.offending_line }}"</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% if generation_failure.pt_pt_violations %}
+<h3>PT-PT (brasileirismos) violations</h3>
+<ul>
+{% for violation in generation_failure.pt_pt_violations %}
+  <li>line {{ violation.line_number }}: "{{ violation.line_text }}" — use "{{ violation.replacement }}"</li>
+{% endfor %}
+</ul>
+{% endif %}
+</section>
+{% endif %}
+
+<section>
+<h2>Generate</h2>
+<form method="post" action="/drafts/{{ draft.id }}/generate">
+  <label>Language override (leave blank to use the detected language)
+    <select name="language_override">
+      <option value="">Use detected: {{ detection.language }}</option>
+      {% for language in profile_languages %}
+      <option value="{{ language }}">{{ language }}</option>
+      {% endfor %}
+    </select>
+  </label><br>
+  <button type="submit">Generate CV</button>
+</form>
+</section>
+</body>
+</html>

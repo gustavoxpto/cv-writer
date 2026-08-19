@@ -14,7 +14,13 @@ querying directly against constructed Application records, per the spec's own sl
 from datetime import date
 from pathlib import Path
 
-from cv_writer.db import Application, connect, insert_application, list_applications
+from cv_writer.db import (
+    Application,
+    connect,
+    get_application,
+    insert_application,
+    list_applications,
+)
 
 
 def _application(**overrides) -> Application:
@@ -189,6 +195,24 @@ def test_list_applications_filters_by_company_and_area(tmp_path):
 
     assert len(results) == 1
     assert results[0].area == "Engineering"
+
+
+def test_get_application_returns_the_application_with_the_given_id(tmp_path):
+    conn = connect(tmp_path / "cv.sqlite3")
+    app_id = insert_application(conn, _application(company="Acme"))
+
+    found = get_application(conn, app_id)
+
+    assert found is not None
+    assert found.id == app_id
+    assert found.company == "Acme"
+    assert found.skills_featured == ["Python", "SQL"]
+
+
+def test_get_application_returns_none_for_an_id_that_does_not_exist(tmp_path):
+    conn = connect(tmp_path / "cv.sqlite3")
+
+    assert get_application(conn, 999) is None
 
 
 def test_list_applications_sorts_ascending_by_date_when_requested(tmp_path):

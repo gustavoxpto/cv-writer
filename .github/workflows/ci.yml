@@ -1,10 +1,13 @@
 name: CI
 
-# Runs lint + tests for the Python code under src/ (see specs/features/001-cv-writer.md).
-# Kept intentionally minimal and permission-scoped (least-privilege token) per docs/security.md.
-# Full CI parity (coverage across all slices, DB/browser-dependent integration tests) lands
-# incrementally as those slices land — criterion 36 names slice 5 as where this workflow is
-# considered "done", but there's no reason to leave it as a no-op while real tests exist.
+# Runs lint + the full test suite (unit, integration, and e2e) for the Python code under src/
+# (see specs/features/001-cv-writer.md). Kept intentionally minimal and permission-scoped
+# (least-privilege token) per docs/security.md.
+#
+# Criterion 36: this workflow is "done" as of slice 5 — real dependency install, lint, and the
+# whole test suite, including tests/e2e/ (which needs Chromium; see the install step below).
+# `main` was CI-red from slice 3 through slice 4 for exactly that missing step (see this
+# workflow's own history) — this is what turns it green again.
 
 on:
   pull_request:
@@ -25,7 +28,12 @@ jobs:
           python-version: "3.10"
       - name: Install dependencies
         run: python -m pip install --upgrade pip && pip install -e ".[dev]"
+      - name: Install Chromium (Playwright)
+        # --with-deps pulls in the OS-level libraries Chromium needs on ubuntu-latest — without
+        # it the browser installs but fails to launch. Needed for ingestion tier 2, PDF
+        # rendering, and now tests/e2e/'s full-flow tests (criterion 37).
+        run: playwright install chromium --with-deps
       - name: Lint (ruff)
         run: ruff check src tests
       - name: Test (pytest)
-        run: pytest tests/unit tests/integration -q
+        run: pytest tests -q

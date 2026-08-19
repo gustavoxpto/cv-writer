@@ -7,13 +7,19 @@
   /* Criterion 26: black text on white, no colour/shading; ATS-safe single-column structure;
      one documented-shortlist font (see render_html.py's FONT_SHORTLIST), >=10pt body, no
      webfonts (this references a locally-installed system font by name only — see ADR 0004
-     decision 4 for why no font file is bundled in this repo). */
+     decision 4 for why no font file is bundled in this repo).
+
+     "Liberation Sans" is named explicitly after Arial/Helvetica because a stock Linux box
+     (including CI's ubuntu-latest) has neither, and would otherwise fall back to whatever
+     generic sans-serif the OS picked — an unrecorded choice. Liberation Sans is
+     glyph-width-identical to Arial, so the page lays out the same either way. Naming it
+     makes the substitution deliberate rather than accidental. See ADR 0005. */
   @page {
     size: A4;
     margin: 20mm 18mm;
   }
   body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, "Liberation Sans", sans-serif;
     font-size: 11pt;
     line-height: 1.4;
     color: #000000;
