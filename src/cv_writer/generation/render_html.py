@@ -16,7 +16,26 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 
 # The documented font shortlist criterion 26 requires — one of these, embedded, at >=10pt.
-FONT_SHORTLIST = {"arial", "helvetica", "georgia", "calibri", "verdana", "times new roman"}
+#
+# The second group are the metric-compatible libre twins: on a machine with no Arial (any
+# stock Linux, including CI's ubuntu-latest runner), Chromium renders Liberation Sans, which
+# is glyph-width-identical to Arial by design. Criterion 26's actual requirements — widely
+# available, screen-and-print legible, non-decorative, embedded, no webfont that can fail to
+# load — are met identically by either name, and the page lays out the same because the
+# metrics match. They are named here, and in cv.html.jinja's font stack, so that this is a
+# recorded decision rather than a silent OS fallback nobody chose. See ADR 0005.
+_ARIAL_METRIC_TWINS = {"liberationsans", "liberation sans"}
+_TIMES_METRIC_TWINS = {"liberationserif", "liberation serif"}
+_CALIBRI_METRIC_TWINS = {"carlito"}
+
+FONT_SHORTLIST = {
+    "arial",
+    "helvetica",
+    "georgia",
+    "calibri",
+    "verdana",
+    "times new roman",
+} | _ARIAL_METRIC_TWINS | _TIMES_METRIC_TWINS | _CALIBRI_METRIC_TWINS
 
 _env = Environment(
     loader=FileSystemLoader(TEMPLATES_DIR),

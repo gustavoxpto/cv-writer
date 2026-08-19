@@ -165,6 +165,43 @@ criterion 37 asks for an e2e test, and a test CI does not execute is not evidenc
 acceptance evidence. Job time grows by the Chromium download plus real PDF renders; no caching
 is added in this slice — measure first, optimise if it becomes annoying.
 
+### 10. Criterion 26's font shortlist admits the metric-compatible libre twins
+
+Added after decision 9 was implemented, because the newly-working CI immediately failed on it.
+
+The first CI run with Chromium installed failed
+`tests/integration/generation/test_pdf_render.py::test_pdf_font_is_on_the_documented_shortlist_and_embedded`
+with `LiberationSans-Bold` not in the shortlist. The cause is not a slice 5 defect: `cv.html.jinja`
+asks for `Arial, Helvetica, sans-serif`, and `ubuntu-latest` ships neither, so Chromium fell back
+to Liberation Sans. On the maintainer's Windows box Arial exists and the test had always passed.
+The bug was latent through slices 3 and 4 and only became visible once CI could actually run a
+browser — which is the wiring in decision 9 doing its job on its first run.
+
+**Decision:** name `"Liberation Sans"` explicitly in the template's font stack *after*
+Arial/Helvetica, and widen `FONT_SHORTLIST` to include the metric-compatible libre equivalents —
+Liberation Sans ≡ Arial, Liberation Serif ≡ Times New Roman, Carlito ≡ Calibri. These are
+glyph-width-identical by design, so the page lays out the same regardless of which one renders,
+and criterion 26's real requirements (widely available, screen-and-print legible, non-decorative,
+embedded, no webfont that can fail to load) hold identically for either name. Windows and macOS
+still render Arial; Linux renders its twin *by recorded choice* instead of by silent OS fallback.
+
+**Rejected: installing `ttf-mscorefonts-installer` in CI** so the literal shortlist renders
+everywhere. It needs an interactive EULA accepted through `debconf`, its apt source is a known
+flake, and it drags Microsoft font licensing into CI — real cost taken on purely to avoid
+amending a shortlist whose purpose is already satisfied.
+
+**Rejected: pinning the template to Liberation Sans on every platform.** Byte-identical output
+across OSes is attractive, but it changes what the maintainer's own CVs look like in order to fix
+a CI problem — a product change wearing a build fix's clothes.
+
+**Rejected: skipping the assertion when Arial is absent.** That re-hides the exact cross-platform
+gap CI had just surfaced, and leaves criterion 26 unverified on the only platform CI runs.
+
+**Consequences:** criterion 26's shortlist is now six named families plus their documented metric
+twins. A CV generated on Linux and one generated on Windows are visually equivalent, not
+byte-identical. Regression tests in `tests/integration/generation/test_render_html.py` pin both
+halves — the stack names the twin, and the shortlist accepts it.
+
 ## New runtime dependencies
 
 | Package | Version | Why |
