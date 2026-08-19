@@ -41,6 +41,9 @@
 
 <section>
 <h2>Extra input</h2>
+{% if extra_input_error %}
+<p class="error">{{ extra_input_error }}</p>
+{% endif %}
 <ul>
 {% for extra in draft.extra_inputs %}
   <li>[{{ extra.id }}] ({{ extra.kind.value }}) {{ extra.text }}</li>

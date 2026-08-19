@@ -235,14 +235,41 @@ def add_extra_input(
     promote_candidate: bool = Form(False),
 ):
     """Criterion 17: append one piece of per-application extra input, id assigned `extra-1`,
-    `extra-2`, ... in submission order (generation/models.py's own ExtraInput docstring)."""
+    `extra-2`, ... in submission order (generation/models.py's own ExtraInput docstring).
+
+    `kind` only ever reaches the fixed `<select>` options in draft.html.jinja in normal use,
+    but it arrives as a plain form string, so a hand-crafted request can still send a value
+    outside `ExtraInputKind`. `ExtraInputKind(kind)` raises a plain `ValueError` on that —
+    caught here and turned into the same "re-render the draft page with the reason" pattern
+    `/drafts/{draft_id}/generate` already uses for GenerationFailure, rather than an unhandled
+    500 (the same class of bug the review flagged for an unwhitelisted `sort_by`)."""
     draft = _get_draft(request, draft_id)
+
+    try:
+        extra_input_kind = ExtraInputKind(kind)
+    except ValueError:
+        profile = _profile(request)
+        match_report = build_match_report(profile, extract_requirements(draft.posting.raw_text))
+        detection = detect_posting_language(draft.posting.raw_text)
+        return templates.TemplateResponse(
+            request,
+            "draft.html.jinja",
+            {
+                "draft": draft,
+                "match_report": match_report,
+                "gaps": match_report.gaps(),
+                "detection": detection,
+                "profile_languages": [language.name for language in profile.languages],
+                "extra_input_error": f"unknown extra-input kind: {kind!r}",
+            },
+            status_code=422,
+        )
 
     next_id = f"extra-{len(draft.extra_inputs) + 1}"
     draft.extra_inputs.append(
         ExtraInput(
             id=next_id,
-            kind=ExtraInputKind(kind),
+            kind=extra_input_kind,
             text=text,
             promote_candidate=promote_candidate,
         )
