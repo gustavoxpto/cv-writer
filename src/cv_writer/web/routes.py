@@ -132,7 +132,17 @@ def create_draft_from_url(
 ):
     """Tier 1 -> tier 2 via the injected `ingest_url` (criteria 9.1-9.2). On IngestionFailure,
     re-render the same page with `.reason` shown and the paste form offered with what the user
-    already typed preserved, per criteria 9.3 and 11 (never a silent empty result)."""
+    already typed preserved, per criteria 9.3 and 11 (never a silent empty result).
+
+    `ingest_from_url()` (ingestion/pipeline.py) always returns a `Posting` with
+    `company`/`role_title`/`country` unset — it has no way to know them from a fetch alone.
+    `Posting`'s own docstring documents them as "left optional here rather than guessed from
+    the page" and "may be filled in later for a fetched one" — this is that later point: the
+    confirmed fields go onto `posting` itself, not just onto the `Draft`, so anything that
+    reads `posting.country` downstream (criterion 21's PT-PT/PT-BR variant resolution in
+    `generation/language.py::_resolve_pt_variant`) sees the real value instead of `None` and
+    silently falling back to lexis-only sniffing. `create_draft_from_paste` below already does
+    this correctly by construction (`ingest_pasted()` takes `country` directly)."""
     prefill = {
         "url": url,
         "company": company,
@@ -150,8 +160,11 @@ def create_draft_from_url(
             status_code=422,
         )
 
+    posting = result.model_copy(
+        update={"company": company, "role_title": role_title, "country": country}
+    )
     draft = request.app.state.draft_store.create(
-        posting=result, company=company, country=country, area=area, role_title=role_title
+        posting=posting, company=company, country=country, area=area, role_title=role_title
     )
     return RedirectResponse(f"/drafts/{draft.id}", status_code=303)
 
@@ -242,7 +255,13 @@ def add_extra_input(
     outside `ExtraInputKind`. `ExtraInputKind(kind)` raises a plain `ValueError` on that —
     caught here and turned into the same "re-render the draft page with the reason" pattern
     `/drafts/{draft_id}/generate` already uses for GenerationFailure, rather than an unhandled
-    500 (the same class of bug the review flagged for an unwhitelisted `sort_by`)."""
+    500 (the same class of bug the review flagged for an unwhitelisted `sort_by`).
+
+    If a CV was already generated for this draft, adding new input here invalidates it:
+    `/drafts/{draft_id}/pages` and `/drafts/{draft_id}/confirm` only check `generated_cv is
+    None`, so without this a stale CV computed *before* the new input could still be confirmed
+    and persisted — silently missing the input the human just added, with nothing in the UI
+    to say so. Clearing it forces a fresh `/generate` before either of those can proceed."""
     draft = _get_draft(request, draft_id)
 
     try:
@@ -274,6 +293,9 @@ def add_extra_input(
             promote_candidate=promote_candidate,
         )
     )
+    if draft.generated_cv is not None:
+        draft.generated_cv = None
+        draft.page_fit = None
     request.app.state.draft_store.update(draft)
     return RedirectResponse(f"/drafts/{draft_id}", status_code=303)
 
