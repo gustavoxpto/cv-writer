@@ -43,7 +43,7 @@ this list must go back into the spec first — it does not get added at validati
     separate assertion names the 8 Appendix A keys with their phrases, so a reviewer can see
     AC-002 discharged without diffing a 34-key blob.
 
-- [ ] **C-003** — A Spanish or Portuguese posting's own section headings decide required vs
+- [x] **C-003** — A Spanish or Portuguese posting's own section headings decide required vs
       preferred, as English headings already do.
   - **Verifies:** AC-003
   - **Check:** `tests/unit/ingestion/test_requirement_sections.py` asserts that in a Spanish
@@ -52,7 +52,7 @@ this list must go back into the spec first — it does not get added at validati
     `RequirementKind.PREFERRED_SKILL` — and that the preferred one is not also present as
     required. The same two assertions for Portuguese `Requisitos:` / `Diferenciais:`.
 
-- [ ] **C-004** — A language named in its own language is recognised as that language.
+- [x] **C-004** — A language named in its own language is recognised as that language.
   - **Verifies:** AC-004
   - **Check:** `tests/unit/ingestion/test_term_list.py` asserts `extract_requirements` maps
     "inglés" to `english`, "español" to `spanish`, "alemán" to `german`, "português" to
@@ -98,7 +98,7 @@ Red, green, refactor, gate, one commit, per task. Gate levels per `.specs/templa
   - **Done when:** the snapshot test passes against the frozen 387d937 dictionaries and no
     vocabulary literal remains in `requirements.py`.
 
-- [ ] **T-003** — Add the Spanish/Portuguese section markers and the native language names.
+- [x] **T-003** — Add the Spanish/Portuguese section markers and the native language names.
   - **Covers:** AC-003, AC-004 · **Delivers:** C-003, C-004
   - **Files:** `src/cv_writer/ingestion/data/requirement_terms.yaml`,
     `tests/unit/ingestion/test_requirement_sections.py`,

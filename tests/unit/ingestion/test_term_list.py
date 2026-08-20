@@ -1,9 +1,8 @@
 """Spec 002: the requirement vocabulary is versioned data, not Python literals.
 
-Covers AC-001 (loaded from a versioned YAML file) and AC-002 (the migration loses no
-vocabulary). AC-004's native-language names live in test_requirement_sections.py alongside the
-section-marker tests, since both are assertions about extraction behaviour rather than about the
-file's shape.
+Covers AC-001 (loaded from a versioned YAML file), AC-002 (the migration loses no vocabulary)
+and AC-004 (a language named in its own language is recognised). AC-003's section markers live
+in test_requirement_sections.py.
 
 The no-loss test here is the point of the whole exercise. The 8 non-engineering terms were added
 ad hoc on 2026-08-19 and committed untested on 2026-08-20 (387d937) to unblock a real
@@ -19,6 +18,8 @@ from pathlib import Path
 
 import pytest
 
+from cv_writer.ingestion.models import RequirementKind
+from cv_writer.ingestion.requirements import extract_requirements
 from cv_writer.ingestion.term_list import (
     DEFAULT_TERMS_PATH,
     RequirementTermList,
@@ -192,19 +193,52 @@ def test_appendix_a_terms_are_present_with_their_exact_phrases(terms: Requiremen
     assert "consultoría estratégica" in skills["strategic consulting"]
 
 
-def test_seniority_language_and_work_model_terms_match_the_snapshot(
-    terms: RequirementTermList,
-):
-    """AC-002: the other three dictionaries survive the move intact too."""
+def test_seniority_and_work_model_terms_match_the_snapshot(terms: RequirementTermList):
+    """AC-002: the two dictionaries this feature does not extend survive the move untouched."""
     assert terms.as_mapping("seniority") == SNAPSHOT_387D937_SENIORITY
-    assert terms.as_mapping("languages") == SNAPSHOT_387D937_LANGUAGES
     assert terms.as_mapping("work_models") == SNAPSHOT_387D937_WORK_MODELS
 
 
-def test_section_markers_match_the_snapshot(terms: RequirementTermList):
-    """AC-002: the required/preferred markers are data now as well, including 'se valorará'."""
-    assert tuple(terms.section_markers.required) == SNAPSHOT_387D937_REQUIRED_MARKERS
-    assert tuple(terms.section_markers.preferred) == SNAPSHOT_387D937_PREFERRED_MARKERS
+# Languages and section markers are the two groups spec 002 extends (AC-003, AC-004), so they
+# cannot be asserted equal to the 387d937 snapshot. They get the same strength in two parts
+# instead: nothing from the snapshot may disappear, AND the current content must equal an
+# expected value stated here in full. Every future addition therefore shows up as a deliberate
+# edit in this file — the property the snapshot test was protecting — while the no-loss half
+# stays true permanently, whatever gets added later.
+EXPECTED_LANGUAGES: dict[str, list[str]] = {
+    **SNAPSHOT_387D937_LANGUAGES,
+    "portuguese": ["portuguese", "português"],
+    "french": ["french", "français"],
+}
+
+EXPECTED_REQUIRED_MARKERS = SNAPSHOT_387D937_REQUIRED_MARKERS + ("requisitos",)
+EXPECTED_PREFERRED_MARKERS = SNAPSHOT_387D937_PREFERRED_MARKERS + ("diferenciais",)
+
+
+def test_language_terms_extend_the_snapshot_without_losing_any(terms: RequirementTermList):
+    """AC-002 no-loss, AC-004 additions."""
+    languages = terms.as_mapping("languages")
+
+    for key, phrases in SNAPSHOT_387D937_LANGUAGES.items():
+        assert key in languages, f"language {key!r} lost in the migration"
+        for phrase in phrases:
+            assert phrase in languages[key], f"phrase {phrase!r} lost from {key!r}"
+
+    assert languages == EXPECTED_LANGUAGES
+
+
+def test_section_markers_extend_the_snapshot_without_losing_any(terms: RequirementTermList):
+    """AC-002 no-loss, AC-003 additions. Includes 'se valorará', which shipped untested."""
+    required = tuple(terms.section_markers.required)
+    preferred = tuple(terms.section_markers.preferred)
+
+    for marker in SNAPSHOT_387D937_REQUIRED_MARKERS:
+        assert marker in required, f"required marker {marker!r} lost in the migration"
+    for marker in SNAPSHOT_387D937_PREFERRED_MARKERS:
+        assert marker in preferred, f"preferred marker {marker!r} lost in the migration"
+
+    assert required == EXPECTED_REQUIRED_MARKERS
+    assert preferred == EXPECTED_PREFERRED_MARKERS
 
 
 def test_loader_accepts_an_alternate_path(tmp_path: Path):
@@ -286,3 +320,39 @@ def test_every_phrase_is_non_empty(terms: RequirementTermList):
             assert phrases, f"{group}:{key} has no phrases"
             for phrase in phrases:
                 assert phrase.strip(), f"{group}:{key} has a blank phrase"
+
+# AC-004: what each native-language name must resolve to. The accents are the point — "ingles"
+# and "inglés" are different strings, and a posting writes the accented one.
+NATIVE_LANGUAGE_NAMES = {
+    "inglés": "english",
+    "español": "spanish",
+    "alemán": "german",
+    "português": "portuguese",
+    "français": "french",
+}
+
+
+def test_native_language_names_resolve_to_the_canonical_language():
+    """AC-004: a posting that names a language in that language is understood. Before spec 002
+    LANGUAGE_TERMS was English-only, so a Spanish posting asking for "inglés y alemán" surfaced
+    no language requirement at all."""
+    for native, canonical in NATIVE_LANGUAGE_NAMES.items():
+        result = extract_requirements(f"Se requiere {native} para el puesto.")
+
+        languages = {r.value for r in result.of_kind(RequirementKind.LANGUAGE)}
+        assert canonical in languages, f"{native!r} did not resolve to {canonical!r}"
+
+
+def test_native_language_names_keep_their_own_spelling_as_the_source_phrase():
+    """AC-004 with source_phrase: criterion 12's promise is that a human can see the verbatim
+    posting text behind a requirement. Reporting "german" against a posting that said "alemán"
+    would break that, so the accented original has to survive."""
+    for native, canonical in NATIVE_LANGUAGE_NAMES.items():
+        result = extract_requirements(f"Se requiere {native} para el puesto.")
+
+        matched = [
+            r for r in result.of_kind(RequirementKind.LANGUAGE) if r.value == canonical
+        ]
+        assert matched, f"{native!r} did not resolve to {canonical!r}"
+        assert matched[0].source_phrase == native
+

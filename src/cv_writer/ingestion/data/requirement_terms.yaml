@@ -25,236 +25,239 @@
 # History: keys 27-34 under `skills` and the accented language names arrived on 2026-08-19 as an
 # ad hoc widening for one real Spanish posting, committed untested in 387d937. Spec 002 moved
 # the whole vocabulary here and put it under test; see that spec's Appendix A.
-version: 1
+
+version: 2
 
 skills:
   - key: "python"
     phrases:
-        - "python"
+      - "python"
   - key: "javascript"
     phrases:
-        - "javascript"
-        - "js"
+      - "javascript"
+      - "js"
   - key: "typescript"
     phrases:
-        - "typescript"
-        - "ts"
+      - "typescript"
+      - "ts"
   - key: "sql"
     phrases:
-        - "sql"
+      - "sql"
   - key: "docker"
     phrases:
-        - "docker"
+      - "docker"
   - key: "kubernetes"
     phrases:
-        - "kubernetes"
-        - "k8s"
+      - "kubernetes"
+      - "k8s"
   - key: "aws"
     phrases:
-        - "aws"
-        - "amazon web services"
+      - "aws"
+      - "amazon web services"
   - key: "azure"
     phrases:
-        - "azure"
+      - "azure"
   - key: "gcp"
     phrases:
-        - "gcp"
-        - "google cloud"
+      - "gcp"
+      - "google cloud"
   - key: "react"
     phrases:
-        - "react"
-        - "react.js"
-        - "reactjs"
+      - "react"
+      - "react.js"
+      - "reactjs"
   - key: "fastapi"
     phrases:
-        - "fastapi"
+      - "fastapi"
   - key: "django"
     phrases:
-        - "django"
+      - "django"
   - key: "flask"
     phrases:
-        - "flask"
+      - "flask"
   - key: "git"
     phrases:
-        - "git"
+      - "git"
   - key: "ci/cd"
     phrases:
-        - "ci/cd"
-        - "continuous integration"
-        - "continuous delivery"
+      - "ci/cd"
+      - "continuous integration"
+      - "continuous delivery"
   - key: "linux"
     phrases:
-        - "linux"
+      - "linux"
   - key: "rest api"
     phrases:
-        - "rest api"
-        - "restful api"
-        - "rest apis"
+      - "rest api"
+      - "restful api"
+      - "rest apis"
   - key: "graphql"
     phrases:
-        - "graphql"
+      - "graphql"
   - key: "postgresql"
     phrases:
-        - "postgresql"
-        - "postgres"
+      - "postgresql"
+      - "postgres"
   - key: "mysql"
     phrases:
-        - "mysql"
+      - "mysql"
   - key: "mongodb"
     phrases:
-        - "mongodb"
-        - "mongo"
+      - "mongodb"
+      - "mongo"
   - key: "terraform"
     phrases:
-        - "terraform"
+      - "terraform"
   - key: "agile"
     phrases:
-        - "agile"
-        - "scrum"
+      - "agile"
+      - "scrum"
   - key: "pytest"
     phrases:
-        - "pytest"
+      - "pytest"
   - key: "pandas"
     phrases:
-        - "pandas"
+      - "pandas"
   - key: "machine learning"
     phrases:
-        - "machine learning"
-        - "ml"
+      - "machine learning"
+      - "ml"
   - key: "stakeholder management"
     phrases:
-        - "stakeholders"
-        - "stakeholder management"
+      - "stakeholders"
+      - "stakeholder management"
   - key: "project planning"
     phrases:
-        - "gestión de proyectos"
-        - "planificación de proyectos"
-        - "planificación anual de proyectos"
-        - "project management"
+      - "gestión de proyectos"
+      - "planificación de proyectos"
+      - "planificación anual de proyectos"
+      - "project management"
   - key: "instructional design"
     phrases:
-        - "capacitarás"
-        - "capacitación"
-        - "formación básica y avanzada"
-        - "formación teórico-práctica"
+      - "capacitarás"
+      - "capacitación"
+      - "formación básica y avanzada"
+      - "formación teórico-práctica"
   - key: "cross-functional collaboration"
     phrases:
-        - "transversal"
-        - "trabajo transversal"
-        - "afectación transversal"
+      - "transversal"
+      - "trabajo transversal"
+      - "afectación transversal"
   - key: "problem solving"
     phrases:
-        - "resolución de problemas"
+      - "resolución de problemas"
   - key: "strategic consulting"
     phrases:
-        - "consultoría estratégica"
+      - "consultoría estratégica"
   - key: "microsoft office"
     phrases:
-        - "paquete office"
-        - "microsoft office"
+      - "paquete office"
+      - "microsoft office"
   - key: "google workspace"
     phrases:
-        - "entorno google"
-        - "google workspace"
+      - "entorno google"
+      - "google workspace"
 
 seniority:
   - key: "intern"
     phrases:
-        - "intern"
-        - "internship"
+      - "intern"
+      - "internship"
   - key: "junior"
     phrases:
-        - "junior"
-        - "entry level"
-        - "entry-level"
+      - "junior"
+      - "entry level"
+      - "entry-level"
   - key: "mid"
     phrases:
-        - "mid-level"
-        - "mid level"
-        - "intermediate"
+      - "mid-level"
+      - "mid level"
+      - "intermediate"
   - key: "senior"
     phrases:
-        - "senior"
-        - "sr."
+      - "senior"
+      - "sr."
   - key: "lead"
     phrases:
-        - "lead"
-        - "tech lead"
-        - "team lead"
+      - "lead"
+      - "tech lead"
+      - "team lead"
   - key: "staff"
     phrases:
-        - "staff engineer"
+      - "staff engineer"
   - key: "principal"
     phrases:
-        - "principal engineer"
-        - "principal"
+      - "principal engineer"
+      - "principal"
   - key: "manager"
     phrases:
-        - "engineering manager"
-        - "manager"
+      - "engineering manager"
+      - "manager"
   - key: "director"
     phrases:
-        - "director"
+      - "director"
 
 languages:
   - key: "english"
     phrases:
-        - "english"
-        - "inglés"
+      - "english"
+      - "inglés"
   - key: "european portuguese"
     phrases:
-        - "european portuguese"
-        - "pt-pt"
+      - "european portuguese"
+      - "pt-pt"
   - key: "brazilian portuguese"
     phrases:
-        - "brazilian portuguese"
-        - "pt-br"
+      - "brazilian portuguese"
+      - "pt-br"
   - key: "portuguese"
     phrases:
-        - "portuguese"
+      - "portuguese"
+      - "português"
   - key: "spanish"
     phrases:
-        - "spanish"
-        - "español"
+      - "spanish"
+      - "español"
   - key: "french"
     phrases:
-        - "french"
+      - "french"
+      - "français"
   - key: "german"
     phrases:
-        - "german"
-        - "alemán"
+      - "german"
+      - "alemán"
   - key: "italian"
     phrases:
-        - "italian"
+      - "italian"
   - key: "dutch"
     phrases:
-        - "dutch"
+      - "dutch"
 
 work_models:
   - key: "remote"
     phrases:
-        - "fully remote"
-        - "remote"
-        - "work from home"
-        - "wfh"
+      - "fully remote"
+      - "remote"
+      - "work from home"
+      - "wfh"
   - key: "hybrid"
     phrases:
-        - "hybrid"
+      - "hybrid"
   - key: "onsite"
     phrases:
-        - "on-site"
-        - "onsite"
-        - "in-office"
-        - "in office"
+      - "on-site"
+      - "onsite"
+      - "in-office"
+      - "in office"
   - key: "relocation"
     phrases:
-        - "relocation"
-        - "relocate"
-        - "visa sponsorship"
-        - "sponsorship"
+      - "relocation"
+      - "relocate"
+      - "visa sponsorship"
+      - "sponsorship"
 
-# Headings that flip the extractor between the required and preferred zones of a
-# posting. Order does not matter; matching is case-insensitive.
+# Headings that flip the extractor between the required and preferred zones of a posting.
+# Order does not matter; matching is case-insensitive.
 section_markers:
   required:
     - "requirements"
@@ -267,6 +270,8 @@ section_markers:
     - "qualifications"
     - "what we're looking for"
     - "what we are looking for"
+    # Spanish and Portuguese spell this heading identically (spec 002 AC-003).
+    - "requisitos"
   preferred:
     - "nice to have"
     - "nice-to-have"
@@ -278,3 +283,5 @@ section_markers:
     - "good to have"
     - "pluses"
     - "se valorará"
+    # Portuguese for "differentiators" — the pt-BR/pt-PT equivalent of "nice to have".
+    - "diferenciais"
