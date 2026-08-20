@@ -11,8 +11,8 @@ superseded and add the new one. `## Current` and `## Handoff` are snapshots and 
 ## Current
 
 - **Feature:** 002-requirement-dictionary-expansion
-- **Phase:** specify
-- **Spec status:** draft — **not signed off**
+- **Phase:** execute
+- **Spec status:** signed-off (Gustavo, 2026-08-20)
 - **Branch:** `feat/harness-engineering`
 
 <!--
