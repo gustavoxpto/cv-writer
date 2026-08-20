@@ -52,15 +52,16 @@ Lightweight decisions live here as `AD-NNN`. Anything hard to reverse gets a ful
 
 
 
+
 Snapshot of where work stopped. Overwrite freely — this is not a log.
 Regenerate with `python scripts/handoff.py`.
 
-- **Feature:** `002-requirement-dictionary-expansion` · phase `specify`
+- **Feature:** `002-requirement-dictionary-expansion` · phase `validate`
 - **Branch:** `feat/harness-engineering`
-- **Last commit:** d871f16 docs(002): pin the stopgap terms in the spec as appendix a
-- **Next step:** Gustavo signs off .specs/features/002-requirement-dictionary-expansion/spec.md (Appendix A now pins the committed stopgap), then /tasks 002-requirement-dictionary-expansion
-- **Blockers:** spec 002 sign-off is a human gate. Also open: untested stopgap terms are now in src/ via 387d937, and AC-002/AC-005 owe them tests.
-- **Uncommitted:** 1 file(s) — specs/STATE.md
+- **Last commit:** 1be7157 docs(002): record validation iteration 1
+- **Next step:** Gustavo pastes the redacted Lidl (Spain) posting text; then T-005 (fixture + tests/integration/ingestion/test_real_posting.py) closes AC-005, then re-verify
+- **Blockers:** T-005/AC-005 blocked on the real posting text — AC-005a forbids reconstructing it from the term list. Stale scratch git worktree at scratchpad/wt002 awaiting Gustavo's permission to remove.
+- **Uncommitted:** 0 file(s) — clean tree
 
 ---
 
