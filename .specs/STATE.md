@@ -49,15 +49,18 @@ Lightweight decisions live here as `AD-NNN`. Anything hard to reverse gets a ful
 
 
 
+
+
+
 Snapshot of where work stopped. Overwrite freely — this is not a log.
 Regenerate with `python scripts/handoff.py`.
 
 - **Feature:** `002-requirement-dictionary-expansion` · phase `specify`
 - **Branch:** `feat/harness-engineering`
-- **Last commit:** d13a901 feat(harness): add sensors, memory, and mission separation
-- **Next step:** Gustavo reviews and signs off .specs/features/002-requirement-dictionary-expansion/spec.md, then /tasks 002-requirement-dictionary-expansion
-- **Blockers:** spec 002 sign-off is a human gate; the loop is correctly halted there
-- **Uncommitted:** 1 file(s) — rc/cv_writer/ingestion/requirements.py
+- **Last commit:** d871f16 docs(002): pin the stopgap terms in the spec as appendix a
+- **Next step:** Gustavo signs off .specs/features/002-requirement-dictionary-expansion/spec.md (Appendix A now pins the committed stopgap), then /tasks 002-requirement-dictionary-expansion
+- **Blockers:** spec 002 sign-off is a human gate. Also open: untested stopgap terms are now in src/ via 387d937, and AC-002/AC-005 owe them tests.
+- **Uncommitted:** 1 file(s) — specs/STATE.md
 
 ---
 
