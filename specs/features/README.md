@@ -1,7 +1,11 @@
-# Feature specs
+# Feature specs (historical)
 
-One file per feature, copied from `../templates/spec-template.md`. Name files
-`NNN-short-slug.md` (numbered like ADRs, so history is easy to scan).
+**New features do not go here.** They go in `.specs/features/<NNN-slug>/`, as a directory of
+artifacts — see `.specs/README.md` and `.claude/skills/spec-driven/SKILL.md`.
 
-A feature spec is **not implemented until its sign-off checkbox is checked** — see `CLAUDE.md`
-for the full loop (spec → red → green → refactor → pair notes → PR → review).
+This folder holds `001-cv-writer.md`: signed off, implemented across five merged PRs, and
+cross-linked from six `docs/pr/*` files, five ADRs and six pairing notes. It stays here as a
+historical record rather than being migrated — the churn of moving it outweighs the consistency
+gained. That call is recorded as `AD-001` in `.specs/STATE.md`.
+
+`specs/adr/` is unaffected and remains the home for architecture decisions.

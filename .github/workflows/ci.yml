@@ -1,13 +1,14 @@
 name: CI
 
-# Runs lint + the full test suite (unit, integration, and e2e) for the Python code under src/
-# (see specs/features/001-cv-writer.md). Kept intentionally minimal and permission-scoped
-# (least-privilege token) per docs/security.md.
+# The outer sensor ring. Local hooks catch things at edit and commit time; this is what a human
+# reviewer can trust before merging, running on a machine that has none of the local state.
 #
-# Criterion 36: this workflow is "done" as of slice 5 — real dependency install, lint, and the
-# whole test suite, including tests/e2e/ (which needs Chromium; see the install step below).
-# `main` was CI-red from slice 3 through slice 4 for exactly that missing step (see this
-# workflow's own history) — this is what turns it green again.
+# Two jobs, deliberately separate:
+#   test     — lint + the full suite (unit, integration, e2e) for the code under src/
+#   harness  — the spec/tasks/contract artifacts themselves, so a feature cannot merge with a
+#              criterion nothing traces to. See docs/harness-engineering.md.
+#
+# Kept permission-scoped (least-privilege token) per docs/security.md.
 
 on:
   pull_request:
@@ -21,19 +22,66 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # A run once wedged for 5+ hours on the Playwright install before being cancelled by hand
+    # (docs/handoff-operational-readiness.md). An unbounded step is not a sensor, it is a hang.
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          # Matches specs/features/001-cv-writer.md. pyproject allows >=3.10; CI pins the
+          # version the project actually targets so a 3.12-only failure cannot hide here.
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
       - name: Install dependencies
         run: python -m pip install --upgrade pip && pip install -e ".[dev]"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
+          restore-keys: playwright-${{ runner.os }}-
+
       - name: Install Chromium (Playwright)
         # --with-deps pulls in the OS-level libraries Chromium needs on ubuntu-latest — without
         # it the browser installs but fails to launch. Needed for ingestion tier 2, PDF
-        # rendering, and now tests/e2e/'s full-flow tests (criterion 37).
+        # rendering, and tests/e2e/'s full-flow tests (criterion 37).
+        timeout-minutes: 10
         run: playwright install chromium --with-deps
+
       - name: Lint (ruff)
-        run: ruff check src tests
+        run: ruff check src tests scripts
+
       - name: Test (pytest)
         run: pytest tests -q
+
+      - name: Test census (no test may vanish silently)
+        run: python scripts/test_census.py
+
+  harness:
+    # Fast and dependency-free: the validators are stdlib-only, so this reports in seconds and
+    # tells a reviewer whether the feature's own paperwork holds up before they read any code.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate feature artifacts
+        run: |
+          status=0
+          shopt -s nullglob
+          for feature in .specs/features/*/; do
+            name=$(basename "$feature")
+            echo "::group::$name"
+            [ -f "$feature/spec.md" ]     && { python scripts/validate_spec.py     "$feature/spec.md"  || status=1; }
+            [ -f "$feature/tasks.md" ]    && { python scripts/validate_tasks.py    "$feature/tasks.md" || status=1; }
+            [ -f "$feature/contract.md" ] && { python scripts/validate_contract.py "$feature"          || status=1; }
+            echo "::endgroup::"
+          done
+          exit $status
