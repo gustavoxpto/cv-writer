@@ -231,6 +231,28 @@ def test_loader_accepts_an_alternate_path(tmp_path: Path):
     assert loaded.as_mapping("skills") == {"basket weaving": ["basket weaving"]}
 
 
+def test_requirements_module_holds_no_vocabulary_literals():
+    """AC-001, stated as the outcome rather than the mechanism: after the migration the module
+    contains no term strings, so extending the vocabulary cannot require editing Python. Checks
+    a sample across all four dictionaries and both marker lists."""
+    source = (REPO_ROOT / "src" / "cv_writer" / "ingestion" / "requirements.py").read_text(
+        encoding="utf-8"
+    )
+
+    for literal in (
+        '"python"',
+        '"kubernetes"',
+        '"se valorará"',
+        '"visa sponsorship"',
+        '"engineering manager"',
+        '"consultoría estratégica"',
+    ):
+        assert literal not in source, (
+            f"{literal} is still a literal in requirements.py; the vocabulary was supposed to "
+            f"move to requirement_terms.yaml"
+        )
+
+
 def test_duplicate_canonical_keys_are_rejected(tmp_path: Path):
     """A YAML list cannot self-enforce unique keys the way a dict does — that is the one thing
     this format gives up. If two entries share a key the second silently wins and half the

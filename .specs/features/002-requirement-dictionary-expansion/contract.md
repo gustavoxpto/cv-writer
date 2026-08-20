@@ -21,7 +21,7 @@ this list must go back into the spec first — it does not get added at validati
 
 ## What will be built
 
-- [ ] **C-001** — Requirement vocabulary is loaded at runtime from a versioned YAML data file,
+- [x] **C-001** — Requirement vocabulary is loaded at runtime from a versioned YAML data file,
       not from literals in Python. Adding a term becomes a YAML edit and a `version` bump, with
       no code change.
   - **Verifies:** AC-001
@@ -33,7 +33,7 @@ this list must go back into the spec first — it does not get added at validati
     no term-literal line — no vocabulary survives in the module. Tests in
     `tests/unit/ingestion/test_term_list.py`.
 
-- [ ] **C-002** — The migration loses no vocabulary. Every canonical key and phrase the Python
+- [x] **C-002** — The migration loses no vocabulary. Every canonical key and phrase the Python
       dictionaries held on 2026-08-20 — the 26 original engineering keys and the 8 Appendix A
       keys alike — is present in the YAML file, spelled identically.
   - **Verifies:** AC-002
@@ -91,7 +91,7 @@ Red, green, refactor, gate, one commit, per task. Gate levels per `.specs/templa
   - **Done when:** the loader returns a validated model from the shipped file and `version` is
     asserted to be an int, mirroring the pt-PT list's own guard.
 
-- [ ] **T-002** — Switch `requirements.py` to the loaded file, with a no-loss snapshot test.
+- [x] **T-002** — Switch `requirements.py` to the loaded file, with a no-loss snapshot test.
   - **Covers:** AC-001, AC-002 · **Delivers:** C-001, C-002
   - **Files:** `src/cv_writer/ingestion/requirements.py`, `tests/unit/ingestion/test_term_list.py`
   - **Gate:** quick
