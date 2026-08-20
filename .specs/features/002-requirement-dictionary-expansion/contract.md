@@ -83,7 +83,7 @@ this list must go back into the spec first — it does not get added at validati
 
 Red, green, refactor, gate, one commit, per task. Gate levels per `.specs/templates/tasks.md`.
 
-- [ ] **T-001** — Create the YAML term file and its loader module.
+- [x] **T-001** — Create the YAML term file and its loader module.
   - **Covers:** AC-001 · **Delivers:** C-001
   - **Files:** `src/cv_writer/ingestion/data/requirement_terms.yaml`,
     `src/cv_writer/ingestion/term_list.py`, `tests/unit/ingestion/test_term_list.py`
