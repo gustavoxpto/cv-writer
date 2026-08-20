@@ -38,3 +38,19 @@ Format: `L-NNN — <rule>. **Because:** <the actual failure that produced it>.`
   step wedged for more than five hours before being cancelled by hand; the job had no
   `timeout-minutes`. An unbounded step is not a sensor, it is a hang.
   (`docs/handoff-operational-readiness.md`)
+
+- **L-006** — When mutation-testing in a `git worktree` against a repo installed editable, force
+  `PYTHONPATH` to the worktree's `src/` and verify with `cv_writer.__file__` before believing any
+  result. **Because:** the shared venv's `__editable__*.pth` resolves imports back to the
+  *original* repo, so a verifier's first mutation run reported "35/35 still pass" while testing
+  unmutated code. A discrimination sensor that silently tests the wrong tree reports every mutant
+  as survived-or-killed at random — worse than no sensor, because it looks like evidence.
+  (spec 002 validation, `.specs/features/002-requirement-dictionary-expansion/validation.md`)
+
+- **L-007** — A test for a "the default already does this" behaviour must be arranged so the
+  default cannot produce the pass. **Because:** two spec 002 tests asserted that a `Requisitos:`
+  heading marks skills as required — and passed before the marker existed, since "required" is
+  the extractor's default zone. Rewritten to place a *preferred* heading above the required one,
+  so the marker has to be recognised to flip the zone back. Ask of every new test: what would
+  make this fail?
+  (spec 002, `tests/unit/ingestion/test_requirement_sections.py`)
