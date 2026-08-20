@@ -70,7 +70,7 @@ this list must go back into the spec first — it does not get added at validati
     provenance by checking the fixture contains Spanish prose absent from the term file, not
     merely the matched phrases.
 
-- [ ] **C-006** — Widening what the extractor recognises introduces no model call anywhere on
+- [x] **C-006** — Widening what the extractor recognises introduces no model call anywhere on
       the extract-to-score path.
   - **Verifies:** AC-006
   - **Check:** `tests/unit/ingestion/test_no_model_calls.py` walks `ingestion/` and `matching/`
@@ -107,7 +107,7 @@ Red, green, refactor, gate, one commit, per task. Gate levels per `.specs/templa
   - **Done when:** both zone tests and all five language-name assertions pass, and `version` is
     bumped.
 
-- [ ] **T-004** — Assert no model call on the extract-to-score path.
+- [x] **T-004** — Assert no model call on the extract-to-score path.
   - **Covers:** AC-006 · **Delivers:** C-006
   - **Files:** `tests/unit/ingestion/test_no_model_calls.py`
   - **Gate:** quick
