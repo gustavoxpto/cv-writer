@@ -1,10 +1,10 @@
 # Spec: Requirement/skill dictionary expansion
 
 - **ID:** 002-requirement-dictionary-expansion
-- **Status:** draft
+- **Status:** signed-off
 - **Size:** medium
 - **Author:** AI (operational-readiness session) + Gustavo
-- **Date:** 2026-08-19 (retrofitted into `.specs/` 2026-08-20)
+- **Date:** 2026-08-19 (retrofitted into `.specs/` 2026-08-20; signed off 2026-08-20)
 
 <!--
 Retrofitted from specs/features/002-requirement-dictionary-expansion.md as the first feature to
@@ -66,7 +66,18 @@ Appendix A pinning the exact surface, and by AC-002/AC-005 owing tests for it.
   "inglés", "español", "alemán" — plus "português", "français"), the system SHALL treat that name
   as a synonym for the canonical language key.
 - **AC-005** — The system SHALL extract more than one requirement from the redacted Lidl (Spain)
-  posting fixture captured on 2026-08-19, and that fixture SHALL be committed under `tests/`.
+  posting fixture, and that fixture SHALL be committed under `tests/`.
+  - **AC-005a** — The fixture SHALL be redacted real posting text. It SHALL NOT be reconstructed
+    from Appendix A. A fixture written out of the term list cannot fail: it would assert that the
+    dictionary matches the dictionary, and would prove nothing about real postings — the exact
+    blind spot L-004 records.
+
+<!--
+Provenance note, sign-off 2026-08-20: the fixture "captured on 2026-08-19" was never actually
+committed and is not recoverable from the repo — not tests/, docs/, or the cv-writer-fixes
+worktree. Gustavo is re-supplying the posting text. Until it lands, AC-005 is the one criterion
+this feature cannot close, and the contract tracks it as an open item rather than a passed one.
+-->
 - **AC-006** — WHILE scoring a match, the system SHALL make no LLM call, preserving criterion 14
   of spec 001 — this change widens only what the deterministic extractor recognizes, never how
   matching scores.
@@ -78,6 +89,16 @@ Appendix A pinning the exact surface, and by AC-002/AC-005 owing tests for it.
 | AC-001, AC-002, AC-004 | `tests/unit/ingestion/` |
 | AC-003, AC-006 | `tests/unit/ingestion/`, `tests/unit/matching/` |
 | AC-005 | `tests/integration/ingestion/` |
+
+`tests/unit/ingestion/` **does not exist yet** — every ingestion test currently lives under
+`tests/integration/ingestion/`, including `test_requirements.py`, which exercises a pure
+function with no I/O and is therefore a unit test filed in the wrong place. `CLAUDE.md` says
+`tests/` mirrors `src/` 1:1; that rule is quietly broken here. Sign-off 2026-08-20 chose to fix
+it rather than inherit it: this feature creates `tests/unit/ingestion/` and puts its new
+pure-function tests there. The existing integration file is **left where it is** — moving it is
+unrelated churn, and this repo does not delete or relocate working tests as a side effect of
+another feature. Naming must not collide across the two directories (neither has `__init__.py`,
+so two modules called `test_requirements.py` would clash under pytest's default import mode).
 
 ## Out of scope
 
@@ -98,14 +119,25 @@ Appendix A pinning the exact surface, and by AC-002/AC-005 owing tests for it.
 
 ## Open questions
 
-- [ ] **OQ-1** (non-blocking) — Hand-maintain the term list centrally (fine for a single-user
-      tool, per spec 001 criterion 35), or derive canonical skill keys automatically from
-      `data/profile.yaml`'s own skill names at ingestion time? The latter means less duplication
-      but couples ingestion to the profile schema in a new way.
+- [x] **OQ-1** (non-blocking) — **Resolved at sign-off, 2026-08-20: hand-maintain the term
+      list.** Canonical keys live in the YAML file, exactly as `pt_pt_terms.yaml` does; ingestion
+      does not read `data/profile.yaml`. Rejected: deriving keys from the profile's own skill
+      names. It removes duplication, but it couples ingestion to the profile schema and — the
+      deciding argument — it would make the extractor structurally incapable of recognising a
+      requirement the profile does not already claim. A posting demanding a skill Gustavo lacks
+      is a *gap the match report should show*, not a term to be silently dropped at extraction.
+      Accepted cost: a canonical key can drift from the profile's skill names and then never
+      match anything, which is L-004 one level up. Not sensed by this feature; see OQ-3.
 - [ ] **OQ-2** (non-blocking) — Should a fresh `data/profile.yaml` (someone forking this harness)
       ship with a starter term list for some common non-engineering professions, or is "grow it
       from your own first real posting" the intended workflow, consistent with how the PT-PT term
       list is meant to grow?
+
+- [ ] **OQ-3** (non-blocking, opened at sign-off 2026-08-20) — Should a sensor warn when a
+      canonical skill key in the term file matches no skill name in `data/profile.yaml`? It would
+      catch the drift OQ-1 accepts. It cannot be a hard test failure, for the reason OQ-1 gives —
+      unmatched keys are legitimate — so it would be an advisory check, and this repo has no
+      advisory-check pattern yet. Deferred rather than improvised.
 
 ## Appendix A — the stopgap terms (committed 2026-08-20, untested)
 
@@ -151,8 +183,10 @@ floor the YAML file must clear, never as the target.
 
 ## Sign-off
 
-- [ ] Human has read this and understands the *why*, not just the *what*.
-- [ ] Acceptance criteria are specific enough to write failing tests from.
+- [x] Human has read this and understands the *why*, not just the *what*. — Gustavo, 2026-08-20.
+- [x] Acceptance criteria are specific enough to write failing tests from. — Gustavo, 2026-08-20,
+      with two amendments made at sign-off: OQ-1 resolved (above), and AC-005's fixture sourced
+      from the real posting text rather than reconstructed (below).
 
 *(Implementation does not start until both boxes are checked and Status is `signed-off`. The
 `PreToolUse` hook on `src/**` enforces this. The ad hoc widening now committed in
