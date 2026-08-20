@@ -49,6 +49,36 @@ SKILL_TERMS: dict[str, list[str]] = {
     "pytest": ["pytest"],
     "pandas": ["pandas"],
     "machine learning": ["machine learning", "ml"],
+    # Added 2026-08-19 for a real Lidl (Spain) posting during operational-readiness testing —
+    # the dictionary above was entirely software-engineering terms (a leftover from the spec's
+    # example "Backend Engineer" persona) and had zero coverage for a non-engineering profile.
+    # Canonical keys are chosen to textually match this profile's actual skill names (see
+    # matching/matcher.py::_skill_name_matches) so real matches succeed; phrases are the actual
+    # Spanish wording from the posting. Scoped, ad hoc widening — see the follow-up spec note in
+    # docs/handoff-operational-readiness.md for the general fix (a data-driven term list, same
+    # shape as the PT-PT brasileirismos checker, instead of a hardcoded Python dict).
+    "stakeholder management": ["stakeholders", "stakeholder management"],
+    "project planning": [
+        "gestión de proyectos",
+        "planificación de proyectos",
+        "planificación anual de proyectos",
+        "project management",
+    ],
+    "instructional design": [
+        "capacitarás",
+        "capacitación",
+        "formación básica y avanzada",
+        "formación teórico-práctica",
+    ],
+    "cross-functional collaboration": [
+        "transversal",
+        "trabajo transversal",
+        "afectación transversal",
+    ],
+    "problem solving": ["resolución de problemas"],
+    "strategic consulting": ["consultoría estratégica"],
+    "microsoft office": ["paquete office", "microsoft office"],
+    "google workspace": ["entorno google", "google workspace"],
 }
 
 SENIORITY_TERMS: dict[str, list[str]] = {
@@ -64,13 +94,13 @@ SENIORITY_TERMS: dict[str, list[str]] = {
 }
 
 LANGUAGE_TERMS: dict[str, list[str]] = {
-    "english": ["english"],
+    "english": ["english", "inglés"],
     "european portuguese": ["european portuguese", "pt-pt"],
     "brazilian portuguese": ["brazilian portuguese", "pt-br"],
     "portuguese": ["portuguese"],
-    "spanish": ["spanish"],
+    "spanish": ["spanish", "español"],
     "french": ["french"],
-    "german": ["german"],
+    "german": ["german", "alemán"],
     "italian": ["italian"],
     "dutch": ["dutch"],
 }
@@ -104,6 +134,8 @@ _PREFERRED_SECTION_MARKERS = (
     "would be a plus",
     "good to have",
     "pluses",
+    # Added 2026-08-19 alongside the SKILL_TERMS widening above — see that comment.
+    "se valorará",
 )
 
 
