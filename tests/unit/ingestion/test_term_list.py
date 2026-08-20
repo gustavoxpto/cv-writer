@@ -312,6 +312,18 @@ def test_duplicate_canonical_keys_are_rejected(tmp_path: Path):
         load_requirement_terms(duplicated)
 
 
+def test_as_mapping_rejects_an_unknown_group():
+    """Kills the mutant that survived validation: as_mapping's guard for an unknown group name
+    had no test, so replacing the raise with a silent `return {}` left every ingestion test
+    green. A silently empty vocabulary group is L-004's exact failure — the extractor would find
+    nothing and report nothing, and no sensor would say why. The module's stated design is to
+    fail loudly; this is what holds it to that."""
+    terms = load_requirement_terms()
+
+    with pytest.raises(ValueError, match="unknown term group"):
+        terms.as_mapping("skils")
+
+
 def test_every_phrase_is_non_empty(terms: RequirementTermList):
     """An empty phrase compiles to a pattern that matches at every position, so one stray blank
     entry would mark every posting as requiring that skill."""
