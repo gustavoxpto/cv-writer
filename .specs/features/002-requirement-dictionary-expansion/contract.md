@@ -59,7 +59,7 @@ this list must go back into the spec first — it does not get added at validati
     `portuguese` and "français" to `french`, each as `RequirementKind.LANGUAGE`, and that
     `source_phrase` keeps the native spelling including accents rather than the canonical key.
 
-- [ ] **C-005** — The redacted real posting extracts more than one requirement.
+- [x] **C-005** — The redacted real posting extracts more than one requirement.
   - **Verifies:** AC-005
   - **Check:** the fixture is committed at
     `tests/integration/ingestion/fixtures/posting_es_redacted.txt`;
@@ -113,8 +113,8 @@ Red, green, refactor, gate, one commit, per task. Gate levels per `.specs/templa
   - **Gate:** quick
   - **Done when:** the AST check and the patched-socket run both pass.
 
-- [ ] **T-005** — Commit the redacted real posting and assert it extracts. **BLOCKED** until
-  Gustavo supplies the posting text; every other task is independent of it.
+- [x] **T-005** — Commit the redacted real posting and assert it extracts. Unblocked 2026-08-21 when Gustavo
+  supplied the posting URL; fetched through the project's own ingest_from_url().
   - **Covers:** AC-005 · **Delivers:** C-005
   - **Files:** `tests/integration/ingestion/fixtures/posting_es_redacted.txt`,
     `tests/integration/ingestion/test_real_posting.py`
