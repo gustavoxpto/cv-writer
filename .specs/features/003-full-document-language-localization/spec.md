@@ -1,13 +1,13 @@
 # Spec: Full-document language localization
 
 - **ID:** 003-full-document-language-localization
-- **Status:** draft
+- **Status:** signed-off
 - **Size:** large
 - **Author:** AI (operational-readiness follow-up) + Gustavo
-- **Date:** 2026-08-19 (original sign-off); migrated into `.specs/` 2026-08-21
+- **Date:** 2026-08-19 (original sign-off); migrated into `.specs/` and re-signed 2026-08-21
 
 <!--
-MIGRATION NOTE — read before re-signing.
+MIGRATION NOTE — how this spec got here.
 
 The substance of this spec was written and signed off by Gustavo on 2026-08-19, as
 `specs/features/003-full-document-language-localization.md` on branch
@@ -18,12 +18,14 @@ The substance of this spec was written and signed off by Gustavo on 2026-08-19, 
 This file is that spec re-expressed in EARS with stable `AC-NNN` IDs. The intent is a faithful
 translation, not a rethink — criteria 1-6 map one-to-one onto AC-001..AC-006, in order, and the
 Why, Out of scope and Open questions are carried over with only the factual re-checks noted
-below. Nothing was added. Anything the migration wanted to add is parked in OQ-4/OQ-5 for you to
-accept or reject, rather than smuggled into a criterion.
+below. Nothing was added at migration time. The two things the migration wanted to change were
+parked as OQ-4 and OQ-5 rather than smuggled into a criterion, and both were then decided by
+Gustavo at re-sign — see those entries for what changed and why.
 
-Because the IDs are new and the wording is tighter, Status returns to `draft` and both sign-off
-boxes are unticked. The 2026-08-19 sign-off covered different text. This should be a short
-re-read, not a fresh decision: the substantive calls, including OQ-1, are already made.
+Because the IDs were new and the wording tighter, Status went back to `draft` with both boxes
+unticked — the 2026-08-19 sign-off covered different text. Gustavo re-signed the migrated form on
+2026-08-21, resolving OQ-4 and OQ-5 in the process. The substantive calls from 2026-08-19,
+including OQ-1, carried over unchanged.
 
 The original file is NOT deleted or moved — it stays on its branch as the historical record,
 consistent with AD-001's treatment of spec 001.
@@ -79,13 +81,17 @@ the tool can now understand a Spanish posting it still cannot write a CV for.
 - **AC-003** — WHERE Spanish is the resolved output language, the system SHALL apply the same
   profile-proficiency gate it applies to the other three languages (`_check_profile_supports()`
   against `MINIMUM_WORKING_RANK`), with no special-casing.
-- **AC-004** — WHEN rendering a CV, the system SHALL emit its own structural strings — at minimum
-  the section headings for experience, education and skills in `render_markdown()` — in the
-  resolved output language, for all four supported languages.
+- **AC-004** — WHEN rendering a CV, the system SHALL emit each of its own structural strings —
+  the experience, education and skills section headings in `render_markdown()`, which OQ-5
+  establishes are the complete set — in the resolved output language, for all four supported
+  languages. `render_plain_text()` derives from `render_markdown()` and inherits this.
 - **AC-005** — The repository SHALL carry an explicit, dated amendment to spec 001's criterion 26,
   rewording "standard section headings (Experience, Education, Skills)" as an illustrative English
   example of the ATS-safe pattern — a small number of clearly-labelled, consistently-named
-  sections — rather than a mandate to emit those English words regardless of output language.
+  sections — rather than a mandate to emit those English words regardless of output language. The
+  amendment SHALL be recorded as a dated entry in that spec's own "Revision log", following the
+  2026-08-17 entry's form, and a test SHALL fail if either the amended criterion text or its
+  revision-log entry is absent (OQ-4, resolved at re-sign).
 - **AC-006** — IF generation is requested for a language absent from `SUPPORTED_LANGUAGES`, THEN
   the system SHALL fail before any LLM call is made, and the reason SHALL reach the user through
   the existing `generate_draft_cv()` re-render path.
@@ -96,7 +102,7 @@ the tool can now understand a Spanish posting it still cannot write a CV for.
 |---|---|
 | AC-001, AC-002, AC-003 | `tests/unit/generation/` |
 | AC-004 | `tests/unit/generation/` |
-| AC-005 | `tests/unit/scripts/` — a documentation sensor; see OQ-4 |
+| AC-005 | `tests/unit/scripts/` — a documentation sensor over `specs/features/001-cv-writer.md` |
 | AC-006 | `tests/unit/generation/`, `tests/integration/generation/` |
 
 ## Out of scope
@@ -129,23 +135,33 @@ the tool can now understand a Spanish posting it still cannot write a CV for.
 - [ ] **OQ-3** (non-blocking) — Should `render_html.py`'s `language` value (currently the full
       lowercase word, used for the HTML `lang` attribute) become a BCP-47 code — "en", "pt", "es",
       "de"? Semantically correct, required by no criterion here.
-- [ ] **OQ-4** (blocking) — **How is AC-005 sensed?** It is the only criterion whose subject is a
-      document rather than behaviour. Options: a unit test asserting spec 001's file contains the
-      amendment text; a manual review checkbox; or dropping it as a criterion and handling the
-      amendment as an ordinary docs commit. This must be settled before sign-off, because a
-      criterion no sensor can decide is exactly what `validate_spec.py` and the contract phase
-      exist to prevent.
-- [ ] **OQ-5** (non-blocking, opened at migration) — AC-004 says "at minimum the section
-      headings". Is anything else in `render_text.py` a user-visible structural string today, or
-      is that the complete list? If it is complete, the "at minimum" hedge should go, since a
-      criterion with an open edge is hard to call done.
+- [x] **OQ-4** (blocking) — **Resolved at re-sign, 2026-08-21: a documentation sensor.** AC-005
+      is discharged by a unit test in `tests/unit/scripts/` asserting two things about
+      `specs/features/001-cv-writer.md` — that criterion 26 no longer reads as a mandate for the
+      English words, and that a dated entry recording the amendment exists in its Revision log.
+      Rejected: a manual review checkbox (a criterion no sensor decides is what the contract phase
+      exists to catch) and dropping AC-005 to an ordinary docs commit (the amendment is load-bearing
+      — without it AC-004 contradicts a signed criterion, and that contradiction should be visible
+      to a sensor rather than resolved in someone's head). Note the limit honestly: the test proves
+      the amendment is *present*, not that it is *well worded*. That part is the human review.
+- [x] **OQ-5** (non-blocking) — **Resolved by inspection at re-sign, 2026-08-21: the three
+      headings are the complete set,** so AC-004 was tightened from "at minimum" to an enumeration.
+      `render_text.py` was read in full. Its only literal user-visible strings are `"## Experience"`,
+      `"## Education"` and `"## Skills"`. Everything else the module emits is profile-authored data
+      (name, email, phone, location, link labels, degree, institution, skill names) or punctuation
+      used as a separator (`" | "`, `", "`, `"- "`, `"#"`). `render_plain_text()` adds no strings of
+      its own — it strips Markdown from `render_markdown()`'s output. If a later slice adds a
+      fourth section, it adds a criterion with it.
 
 ## Sign-off
 
-- [ ] Human has read this and understands the *why*, not just the *what*.
-- [ ] Acceptance criteria are specific enough to write failing tests from.
+- [x] Human has read this and understands the *why*, not just the *what*. — Gustavo, 2026-08-21,
+      re-signing the migrated text after the 2026-08-19 sign-off of the pre-migration form.
+- [x] Acceptance criteria are specific enough to write failing tests from. — Gustavo, 2026-08-21,
+      with two resolutions made at re-sign: OQ-4 (AC-005 gets a documentation sensor) and OQ-5
+      (AC-004 tightened to an enumeration, the hedge removed).
 
-*(Implementation does not start until both boxes are checked and Status is `signed-off`. The
-`PreToolUse` hook on `src/**` enforces this. The 2026-08-19 sign-off applied to the pre-migration
-text and does not carry over — see the migration note at the top. OQ-4 is blocking and must be
-resolved first.)*
+*(Signed off 2026-08-21. Next phase is Design — this spec is sized `large`, so unlike spec 002 it
+gets a `design.md` and an ADR before tasks: it spans `language.py` and `render_text.py`, adds a
+fourth supported language, and amends another signed spec. OQ-2 and OQ-3 remain open and
+non-blocking.)*
