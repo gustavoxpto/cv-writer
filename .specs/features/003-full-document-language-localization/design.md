@@ -245,6 +245,23 @@ heading, into `criteria_part` and `log_part`. Four assertions:
    enough to be genuinely red today (L-007), and no rewording elsewhere can resurrect it.
    Restricting it to `criteria_part` is what lets the revision-log entry quote the old wording
    verbatim, which is the never-delete-shaped way to record an amendment.
+
+   > **Correction (2026-08-21, Tasks phase) — assertion 1 as written above is wrong, and as
+   > specified would have shipped a sensor that is already green before the amendment exists.**
+   > The phrase is *line-wrapped* in `specs/features/001-cv-writer.md`: line 152 ends with
+   > `standard section headings (Experience, Education,` and line 153 resumes with `Skills),`
+   > after six spaces of indent. The contiguous string quoted above therefore does not appear in
+   > the file's raw text at all — `"standard section headings (Experience, Education, Skills)" in
+   > criteria_part` is `False` today — so assertion 1 would have passed against the *unamended*
+   > file. That is precisely the L-007 failure the phrase "genuinely red today" claims to avoid,
+   > and "line 152" above is at best half the location. The fix: normalise whitespace (collapse
+   > runs to single spaces) before the phrase check, while keeping the raw text for the
+   > line-anchored assertions 2 and 3. `tasks.md` T-009 carries the corrected wording and
+   > additionally requires the implementer to *observe* the assertion fail against the unamended
+   > file before writing the amendment. The original sentence is left standing rather than
+   > rewritten, per hard rule #1 — the record of what the design got wrong is worth more than a
+   > clean paragraph.
+
 2. **Criterion 26 still exists.** `criteria_part` still has a line matching `^26\. ` and still
    contains `ATS-safe structure`. Without this, assertion 1 is dischargeable by deleting the
    criterion — the sensor would reward exactly the move hard rule #1 forbids.
