@@ -37,6 +37,28 @@ def extracted() -> RequirementSet:
     return extract_requirements(_posting_text())
 
 
+def test_the_provenance_header_is_not_extracted_as_posting_text():
+    """Closes a mutant that survived validation iteration 2: nothing tested that _posting_text()
+    actually strips the '#' header, so feeding the raw file — provenance commentary and all —
+    into extract_requirements still passed every test in this file. The header names criteria,
+    file paths and the term file itself; letting it reach the extractor would mean this test
+    module was partly measuring its own documentation.
+
+    Worse, it flattered the provenance sensor rather than tripping it: the header's prose is
+    absent from the term file, so including it pushed the unknown-word ratio UP, 0.870 to 0.895.
+    A sensor that reads better when fed the wrong input is not a sensor."""
+    raw = FIXTURE.read_text(encoding="utf-8")
+    stripped = _posting_text()
+
+    assert raw.startswith("#"), "fixture no longer opens with the provenance header"
+    assert "AC-005a" in raw, "the header this test guards is gone from the fixture"
+
+    assert "AC-005a" not in stripped
+    assert "PROVENANCE" not in stripped
+    assert not any(line.startswith("#") for line in stripped.splitlines())
+    assert len(stripped) < len(raw)
+
+
 def test_the_real_posting_yields_more_than_one_requirement(extracted: RequirementSet):
     """AC-005, stated as the spec states it. The bar is deliberately also stated a second way:
     'more than one' was true of the broken behaviour plus a single lucky match, so the second
