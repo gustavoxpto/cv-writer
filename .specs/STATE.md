@@ -63,14 +63,15 @@ Lightweight decisions live here as `AD-NNN`. Anything hard to reverse gets a ful
 
 
 
+
 Snapshot of where work stopped. Overwrite freely — this is not a log.
 Regenerate with `python scripts/handoff.py`.
 
-- **Feature:** `003-full-document-language-localization` · phase `design`
+- **Feature:** `003-full-document-language-localization` · phase `tasks`
 - **Branch:** `spec/003-full-document-language-localization`
-- **Last commit:** c661577 docs(003): re-sign the spec with OQ-4 and OQ-5 resolved
-- **Next step:** Spec 003 is signed off; next phase is Design — architect writes design.md plus an ADR (size large: spans language.py and render_text.py, adds a fourth language, amends signed spec 001). Rebase this branch onto main once PR #7 merges.
-- **Blockers:** None. PR #7 (spec 002 + harness) is open with CI green, awaiting Gustavo's review and merge.
+- **Last commit:** 90333dc docs(003): amend AC-001, add AC-007, re-sign after design
+- **Next step:** Tasks phase: break spec 003 into atomic tasks (task-planner), then Contract. Note the French-fixture test re-arrangement wants its own commit with the reasoning in the message.
+- **Blockers:** None. Spec 003 signed off with AC-001..AC-007, design.md and ADR 0006 complete.
 - **Uncommitted:** 0 file(s) — clean tree
 
 ---
