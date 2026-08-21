@@ -11,8 +11,8 @@ superseded and add the new one. `## Current` and `## Handoff` are snapshots and 
 ## Current
 
 - **Feature:** 003-full-document-language-localization
-- **Phase:** design
-- **Spec status:** signed-off (Gustavo, 2026-08-21, re-signed after migration)
+- **Phase:** tasks
+- **Spec status:** signed-off (Gustavo, 2026-08-21, re-signed after migration and again after design amendments R-1/R-2)
 - **Branch:** `spec/003-full-document-language-localization`
 
 <!--

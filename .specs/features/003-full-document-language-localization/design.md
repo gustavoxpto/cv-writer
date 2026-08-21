@@ -283,6 +283,25 @@ Every component above traces to a criterion; nothing is proposed without one.
 **Not touched, deliberately:** `data/profile.example.yaml` (no criterion asks for Spanish in the
 example profile), `render_html.py`, `pt_pt_checker.py`, `validator.py`, `web/templates/`.
 
+## Resolution of the flagged concerns (2026-08-21, after Gustavo's review)
+
+Two of the concerns raised below were decided before Tasks. Both went back into `spec.md` rather
+than being accepted as design-only, which is the C-007 discipline from spec 002: work a criterion
+does not name does not ride along under an existing AC number.
+
+- **AC-001 as a superset → the criterion was widened, not the design narrowed.** `spec.md` R-1.
+  AC-001 now gates the resolved language from either door — `override` or
+  `detect_posting_language()`, including its `"unknown"` sentinel — and names the ordering against
+  `_resolve_pt_variant()`. The design's reasoning was accepted as correct; the criterion was what
+  was too narrow.
+- **`reason_code` → promoted to its own criterion, AC-007.** `spec.md` R-2. It changes a public
+  model shape, so a contract item should be able to discharge it by name rather than inherit it as
+  an unnamed detail of AC-001.
+
+The spec was re-signed on both. The remaining concerns below stand as written: the French-fixture
+test re-arrangement, `detect_posting_language()`'s ignored `confidence`, the post-AC-002
+reachability point about fixture profiles, and OQ-2/OQ-3.
+
 ## Concerns for the human, before tasks are broken out
 
 Flagged, not decided. None of these invents a criterion.

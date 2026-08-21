@@ -71,10 +71,12 @@ the tool can now understand a Spanish posting it still cannot write a CV for.
 
 ## Acceptance criteria
 
-- **AC-001** — IF `resolve_output_language()` is given an `override` naming a language absent from
-  `SUPPORTED_LANGUAGES`, THEN the system SHALL refuse it (`allowed=False`) with a reason distinct
-  from the existing "not in profile" and "below working proficiency" reasons, and SHALL perform
-  that check before any profile-proficiency check.
+- **AC-001** — IF `resolve_output_language()` resolves to a language absent from
+  `SUPPORTED_LANGUAGES` — whether that language came from the caller's `override` or from
+  `detect_posting_language()`, including its `"unknown"` sentinel — THEN the system SHALL refuse
+  it (`allowed=False`) with a reason distinct from the existing "not in profile" and "below
+  working proficiency" reasons, and SHALL perform that check before any profile-proficiency check
+  and before any Portuguese-variant resolution. *(Amended 2026-08-21 — see Revision log R-1.)*
 - **AC-002** — The system SHALL include Spanish in `SUPPORTED_LANGUAGES` with its own curated
   stopword set, and `detect_posting_language()` SHALL identify a Spanish posting the same flat way
   it already identifies English and German, with no variant mechanism.
@@ -95,12 +97,17 @@ the tool can now understand a Spanish posting it still cannot write a CV for.
 - **AC-006** — IF generation is requested for a language absent from `SUPPORTED_LANGUAGES`, THEN
   the system SHALL fail before any LLM call is made, and the reason SHALL reach the user through
   the existing `generate_draft_cv()` re-render path.
+- **AC-007** — WHEN `resolve_output_language()` refuses, the resolution it returns SHALL carry a
+  machine-readable reason code identifying which of the three refusal causes applied —
+  unsupported language, language absent from the profile, or proficiency below working level —
+  so that AC-001's "distinct reason" is decidable without asserting on prose.
+  *(Added 2026-08-21 — see Revision log R-2.)*
 
 ### Criterion → test placement
 
 | Criteria | Lives in |
 |---|---|
-| AC-001, AC-002, AC-003 | `tests/unit/generation/` |
+| AC-001, AC-002, AC-003, AC-007 | `tests/unit/generation/` |
 | AC-004 | `tests/unit/generation/` |
 | AC-005 | `tests/unit/scripts/` — a documentation sensor over `specs/features/001-cv-writer.md` |
 | AC-006 | `tests/unit/generation/`, `tests/integration/generation/` |
@@ -153,15 +160,40 @@ the tool can now understand a Spanish posting it still cannot write a CV for.
       its own — it strips Markdown from `render_markdown()`'s output. If a later slice adds a
       fourth section, it adds a criterion with it.
 
+## Revision log
+
+Spec 001's convention: an amendment to a signed criterion is recorded, never made silently. AC
+IDs are stable, so a changed criterion says here what changed and why.
+
+- **R-1 (2026-08-21) — AC-001 widened from the override path to the resolved language.** The
+  design phase traced `resolve_output_language()` and found that gating only `override` leaves
+  `detect_posting_language()` free to resolve to a language absent from `SUPPORTED_LANGUAGES`,
+  including its `"unknown"` sentinel — the same hole AC-001 exists to close, reached by the other
+  door. The design implemented the wider gate; rather than let a criterion quietly do more than
+  it says (the failure the verifier struck C-007 for on spec 002), the criterion was widened to
+  match and the spec re-signed. Also names the ordering against `_resolve_pt_variant()`, which
+  the original wording left open.
+
+- **R-2 (2026-08-21) — AC-007 added for the machine-readable refusal reason.** The design proposed
+  a `reason_code` enum on `LanguageResolution` so AC-001's "distinct reason" could be asserted
+  without freezing prose in tests. Nothing in the spec named it. Rejected the alternative of
+  treating it as an unnamed implementation detail of AC-001: it changes a public model shape, and
+  a contract item should be able to discharge it by name. Rejected prose-only reasons: asserting
+  that three sentences differ means pinning the sentences, after which ordinary rewording turns a
+  test red and the tempting fix is to loosen it.
+
 ## Sign-off
 
 - [x] Human has read this and understands the *why*, not just the *what*. — Gustavo, 2026-08-21,
-      re-signing the migrated text after the 2026-08-19 sign-off of the pre-migration form.
-- [x] Acceptance criteria are specific enough to write failing tests from. — Gustavo, 2026-08-21,
-      with two resolutions made at re-sign: OQ-4 (AC-005 gets a documentation sensor) and OQ-5
-      (AC-004 tightened to an enumeration, the hedge removed).
+      re-signing the migrated text after the 2026-08-19 sign-off of the pre-migration form, and
+      again after the design phase produced amendments R-1 and R-2.
+- [x] Acceptance criteria are specific enough to write failing tests from. — Gustavo, 2026-08-21.
+      Resolutions made across the two re-signs: OQ-4 (AC-005 gets a documentation sensor), OQ-5
+      (AC-004 tightened to an enumeration), R-1 (AC-001 widened to the resolved language) and R-2
+      (AC-007 added for the refusal reason code).
 
-*(Signed off 2026-08-21. Next phase is Design — this spec is sized `large`, so unlike spec 002 it
+*(Signed off 2026-08-21, re-signed the same day after Design. Design is complete —
+`design.md` and `specs/adr/0006-output-language-localization-shape.md`. Next phase is Tasks — this spec is sized `large`, so unlike spec 002 it
 gets a `design.md` and an ADR before tasks: it spans `language.py` and `render_text.py`, adds a
 fourth supported language, and amends another signed spec. OQ-2 and OQ-3 remain open and
 non-blocking.)*
