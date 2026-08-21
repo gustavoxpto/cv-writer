@@ -10,10 +10,10 @@ superseded and add the new one. `## Current` and `## Handoff` are snapshots and 
 
 ## Current
 
-- **Feature:** 002-requirement-dictionary-expansion
-- **Phase:** review
-- **Spec status:** signed-off (Gustavo, 2026-08-20)
-- **Branch:** `feat/harness-engineering`
+- **Feature:** 003-full-document-language-localization
+- **Phase:** specify
+- **Spec status:** draft — **not signed off** (migrated 2026-08-21; OQ-4 is blocking)
+- **Branch:** `spec/003-full-document-language-localization`
 
 <!--
 Phase is one of: idle | specify | design | tasks | contract | execute | validate | review
@@ -41,6 +41,14 @@ Lightweight decisions live here as `AD-NNN`. Anything hard to reverse gets a ful
 - **AD-004** (2026-08-20) — Blocking hooks over warning hooks. A warning that can be ignored is
   feed-forward wearing a sensor's clothes. Every blocking hook prints its own bypass instructions
   and logs the bypass below, so the escape hatch stays honest.
+- **AD-004** (2026-08-21) — Spec 003 was migrated into `.specs/` and re-expressed in EARS rather
+  than implemented from its 2026-08-19 form. The old form uses prose criteria 1-6 in the legacy
+  `specs/` layout, which `validate_spec.py` cannot parse and the `src/**` hook cannot recognise as
+  signed off, so implementing from it would have meant bypassing both gates on the first feature
+  after the harness proved itself. The original file stays on branch
+  `feat/003-full-document-language-localization` as the historical record — same treatment AD-001
+  gives spec 001, and no deletion. Sign-off restarts because the criterion IDs are new; the
+  substantive decisions from 2026-08-19, including OQ-1, carry over unchanged.
 
 ---
 
