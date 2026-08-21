@@ -1,0 +1,287 @@
+# Versioned, data-driven requirement vocabulary (spec 002 AC-001).
+#
+# What this is: the phrases the deterministic extractor looks for in posting text, and the
+# canonical value each one resolves to. Loaded by ingestion/term_list.py, consumed by
+# ingestion/requirements.py. No NLP, no model call — a curated list, not an oracle
+# (ADR 0003, spec 001 criterion 14).
+#
+# HOW TO EXTEND IT — this is the point of the file. Hit a posting whose requirements the tool
+# missed? Add the phrase under the right canonical key, bump `version`, done. No Python edit.
+# If the canonical key is new, choose it to textually match the skill name in data/profile.yaml
+# (see matching/matcher.py::_skill_name_matches), or the requirement will be extracted and then
+# never match your evidence — which looks identical to not extracting it at all.
+#
+# `version` is an int and a unit test asserts it, so a forgotten bump fails loudly rather than
+# leaving two different vocabularies both calling themselves the same list. Same guard, and the
+# same reasoning, as generation/data/pt_pt_terms.yaml.
+#
+# Canonical keys must be unique within a group; term_list.py refuses to load a duplicate rather
+# than let the later entry silently shadow the earlier one (.specs/LESSONS.md L-004).
+#
+# Phrases are matched on word boundaries by ingestion.requirements.word_boundary_pattern, so
+# "sql" does not match inside "postgresql" and "git" does not match inside "github". Accents are
+# significant: "inglés" and "ingles" are different strings and only the first is listed.
+#
+# History: keys 27-34 under `skills` and the accented language names arrived on 2026-08-19 as an
+# ad hoc widening for one real Spanish posting, committed untested in 387d937. Spec 002 moved
+# the whole vocabulary here and put it under test; see that spec's Appendix A.
+
+version: 2
+
+skills:
+  - key: "python"
+    phrases:
+      - "python"
+  - key: "javascript"
+    phrases:
+      - "javascript"
+      - "js"
+  - key: "typescript"
+    phrases:
+      - "typescript"
+      - "ts"
+  - key: "sql"
+    phrases:
+      - "sql"
+  - key: "docker"
+    phrases:
+      - "docker"
+  - key: "kubernetes"
+    phrases:
+      - "kubernetes"
+      - "k8s"
+  - key: "aws"
+    phrases:
+      - "aws"
+      - "amazon web services"
+  - key: "azure"
+    phrases:
+      - "azure"
+  - key: "gcp"
+    phrases:
+      - "gcp"
+      - "google cloud"
+  - key: "react"
+    phrases:
+      - "react"
+      - "react.js"
+      - "reactjs"
+  - key: "fastapi"
+    phrases:
+      - "fastapi"
+  - key: "django"
+    phrases:
+      - "django"
+  - key: "flask"
+    phrases:
+      - "flask"
+  - key: "git"
+    phrases:
+      - "git"
+  - key: "ci/cd"
+    phrases:
+      - "ci/cd"
+      - "continuous integration"
+      - "continuous delivery"
+  - key: "linux"
+    phrases:
+      - "linux"
+  - key: "rest api"
+    phrases:
+      - "rest api"
+      - "restful api"
+      - "rest apis"
+  - key: "graphql"
+    phrases:
+      - "graphql"
+  - key: "postgresql"
+    phrases:
+      - "postgresql"
+      - "postgres"
+  - key: "mysql"
+    phrases:
+      - "mysql"
+  - key: "mongodb"
+    phrases:
+      - "mongodb"
+      - "mongo"
+  - key: "terraform"
+    phrases:
+      - "terraform"
+  - key: "agile"
+    phrases:
+      - "agile"
+      - "scrum"
+  - key: "pytest"
+    phrases:
+      - "pytest"
+  - key: "pandas"
+    phrases:
+      - "pandas"
+  - key: "machine learning"
+    phrases:
+      - "machine learning"
+      - "ml"
+  - key: "stakeholder management"
+    phrases:
+      - "stakeholders"
+      - "stakeholder management"
+  - key: "project planning"
+    phrases:
+      - "gestión de proyectos"
+      - "planificación de proyectos"
+      - "planificación anual de proyectos"
+      - "project management"
+  - key: "instructional design"
+    phrases:
+      - "capacitarás"
+      - "capacitación"
+      - "formación básica y avanzada"
+      - "formación teórico-práctica"
+  - key: "cross-functional collaboration"
+    phrases:
+      - "transversal"
+      - "trabajo transversal"
+      - "afectación transversal"
+  - key: "problem solving"
+    phrases:
+      - "resolución de problemas"
+  - key: "strategic consulting"
+    phrases:
+      - "consultoría estratégica"
+  - key: "microsoft office"
+    phrases:
+      - "paquete office"
+      - "microsoft office"
+  - key: "google workspace"
+    phrases:
+      - "entorno google"
+      - "google workspace"
+
+seniority:
+  - key: "intern"
+    phrases:
+      - "intern"
+      - "internship"
+  - key: "junior"
+    phrases:
+      - "junior"
+      - "entry level"
+      - "entry-level"
+  - key: "mid"
+    phrases:
+      - "mid-level"
+      - "mid level"
+      - "intermediate"
+  - key: "senior"
+    phrases:
+      - "senior"
+      - "sr."
+  - key: "lead"
+    phrases:
+      - "lead"
+      - "tech lead"
+      - "team lead"
+  - key: "staff"
+    phrases:
+      - "staff engineer"
+  - key: "principal"
+    phrases:
+      - "principal engineer"
+      - "principal"
+  - key: "manager"
+    phrases:
+      - "engineering manager"
+      - "manager"
+  - key: "director"
+    phrases:
+      - "director"
+
+languages:
+  - key: "english"
+    phrases:
+      - "english"
+      - "inglés"
+  - key: "european portuguese"
+    phrases:
+      - "european portuguese"
+      - "pt-pt"
+  - key: "brazilian portuguese"
+    phrases:
+      - "brazilian portuguese"
+      - "pt-br"
+  - key: "portuguese"
+    phrases:
+      - "portuguese"
+      - "português"
+  - key: "spanish"
+    phrases:
+      - "spanish"
+      - "español"
+  - key: "french"
+    phrases:
+      - "french"
+      - "français"
+  - key: "german"
+    phrases:
+      - "german"
+      - "alemán"
+  - key: "italian"
+    phrases:
+      - "italian"
+  - key: "dutch"
+    phrases:
+      - "dutch"
+
+work_models:
+  - key: "remote"
+    phrases:
+      - "fully remote"
+      - "remote"
+      - "work from home"
+      - "wfh"
+  - key: "hybrid"
+    phrases:
+      - "hybrid"
+  - key: "onsite"
+    phrases:
+      - "on-site"
+      - "onsite"
+      - "in-office"
+      - "in office"
+  - key: "relocation"
+    phrases:
+      - "relocation"
+      - "relocate"
+      - "visa sponsorship"
+      - "sponsorship"
+
+# Headings that flip the extractor between the required and preferred zones of a posting.
+# Order does not matter; matching is case-insensitive.
+section_markers:
+  required:
+    - "requirements"
+    - "required skills"
+    - "must have"
+    - "must-have"
+    - "you have"
+    - "what you'll need"
+    - "what you will need"
+    - "qualifications"
+    - "what we're looking for"
+    - "what we are looking for"
+    # Spanish and Portuguese spell this heading identically (spec 002 AC-003).
+    - "requisitos"
+  preferred:
+    - "nice to have"
+    - "nice-to-have"
+    - "preferred"
+    - "preferred qualifications"
+    - "bonus points"
+    - "a plus"
+    - "would be a plus"
+    - "good to have"
+    - "pluses"
+    - "se valorará"
+    # Portuguese for "differentiators" — the pt-BR/pt-PT equivalent of "nice to have".
+    - "diferenciais"

@@ -40,3 +40,18 @@ data/*
 # CV Writer local SQLite DB + generated CV output (personal data, spec criterion 31)
 *.sqlite3
 output/
+
+# Scratch review artifacts and one-off fixer scripts. These accumulate at the repo root during
+# sessions; ignored rather than removed, per CLAUDE.md hard rule #1 (deletion needs fresh,
+# explicit, per-action permission). Clear them out deliberately, not incidentally.
+tmp_review_*.txt
+wc_diff_review_*.txt
+ruff_tmp.txt
+fix_lint_tmp.py
+
+# Claude Code worktrees — a full second copy of the repo, per-machine, never versioned.
+.claude/worktrees/
+
+# The bypass token. Its presence disables a blocking hook for one action; it is deliberately
+# local and short-lived, and every use is logged to .specs/STATE.md regardless.
+.specs/BYPASS

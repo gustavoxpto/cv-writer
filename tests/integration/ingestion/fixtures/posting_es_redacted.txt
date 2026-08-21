@@ -1,0 +1,60 @@
+# Redacted real job posting — spec 002 AC-005 / AC-005a.
+#
+# PROVENANCE. Real posting text fetched 2026-08-21 from the URL Gustavo supplied, through this
+# project's own ingest_from_url() (tier 1 succeeded, 3057 chars). The original 2026-08-19 capture
+# referenced in spec.md was never committed and could not be recovered, so this is a re-fetch of
+# the same advert rather than that exact artefact.
+#
+# AC-005a forbids reconstructing this fixture from the term file, and the direction of derivation
+# matters: Appendix A's phrases were taken FROM this posting on 2026-08-19, not the other way
+# round. A fixture written out of the dictionary would assert that the dictionary matches itself.
+#
+# Redacted: employer name, careers URLs, street address, postal code, requisition number and
+# salary band. Every sentence carrying a requirement is verbatim, accents included. Lines
+# beginning with '#' are this header only; the test strips them before extracting.
+
+Consultor/a Senior Corporate Development
+Consultor/a Senior Corporate Development
+Salario
+Desde [SALARIO] hasta [SALARIO] (bruto/anual)
+Localización
+[DIRECCIÓN], Barcelona
+Company
+[EMPRESA] oficinas centrales
+Tipo de jornada
+Jornada completa (contrato indefinido)
+Perfil
+Perfil senior sin experiencia en gestión de equipos
+Referencia
+[REFERENCIA]
+Área de empleo
+Corporate Development
+Nuestro #team[EMPRESA] es competitivo y muy dinámico. Para saber más sobre cómo es trabajar en [EMPRESA] consulta nuestra página web de empleo: [URL]
+¿Cómo será tu día a día?
+Desarrollarás e implementarás soluciones estratégicas para la Dirección mediante análisis de datos, desarrollo de estrategias, transformación organizativa y gestión del cambio
+Realizarás asesoramiento metodológico, análisis comparativo (benchmarking), desarrollo de indicadores clave que posteriormente conducen a proyectos e iniciativas transversales
+Organizarás workshops y programas de formación para fortalecer las competencias internas y garantizar la alineación con los objetivos de la empresa
+Capacitarás a los diferentes departamentos de [EMPRESA] España en métodos y técnicas de consultoría
+Dirigirás proyectos estratégicos y transversales entre departamentos
+Gestionarás iniciativas/proyectos transversales (por ejemplo, proyectos de eficiencia, reorientaciones, optimizaciones, etc.)
+Asesorarás a las áreas / Dirección y les acompañarás en proyectos que requieran competencias estratégicas y de procesos
+Darás soporte a las áreas en la mejora continua
+Capacitarás a los departamentos especializados en habilidades y métodos de consultoría (incluyendo gestión de proyectos, optimizaciones)
+¿Eres tú la persona que buscamos?
+Estudios Universitarios finalizados
+Nivel de inglés mínimo C1 además de español avanzado
+Dominio del paquete Office o entorno Google
+Experiencia en gestión de proyectos
+Experiencia en análisis, metodología y resolución de problemas, así como habilidades de comunicación y trabajo transversal
+Experiencia en consultoría estratégica mínimo 3 años
+Se valorará
+Conocimientos de alemán
+Qué te ofrecemos
+Te facilitamos formación teórico-práctica adaptada a tu puesto de trabajo, para que seas capaz de enfrentar cada reto con éxito.
+Un salario competitivo, beneficios sociales y coche de empresa
+Garantizamos desde el inicio del proceso de selección que éste se desarrollará en base a criterios objetivos. La preocupación por eliminar la brecha de género, así como cualquier otro tipo de discriminación alcanza también a nuestra política salarial, en la que rige el principio de equidad retributiva ante el desempeño de las mismas funciones.
+Y un equipo como no te imaginas.
+¿Quieres formar parte de una empresa y un equipo en expansión? ¡Inscríbete! Al inscribirte en nuestra oferta de empleo estas aceptando nuestros términos de uso para nuestro portal de empleo. Para más información puedes consultar nuestra página web de empleo: [URL]
+Oficinas centrales
+[DIRECCIÓN]
+[CÓDIGO POSTAL] Barcelona

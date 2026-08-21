@@ -1,32 +1,13 @@
-# Spec: <feature name>
+# Superseded
 
-- **Status:** draft | signed-off | implemented
-- **Author:** <human/AI pairing session>
-- **Date:** <YYYY-MM-DD>
+The current spec template is **`.specs/templates/spec.md`**.
 
-## Why
+It keeps this file's shape — Why / acceptance criteria / Out of scope / Open questions /
+Sign-off — and adds what the sensors need to check it: stable `AC-NNN` criterion IDs, EARS
+phrasing (`SHALL`), a `Size` that drives which phases run, and blocking vs non-blocking open
+questions.
 
-What problem does this solve, for whom? (Not *what* to build yet — *why* it's worth building.)
+Validate a spec with `python scripts/validate_spec.py .specs/features/<slug>/spec.md`.
 
-## What (acceptance criteria)
-
-Numbered, testable statements. Each one should map to at least one test in `tests/`.
-
-1. ...
-2. ...
-
-## Out of scope
-
-Explicitly list what this spec does *not* cover, to stop scope creep mid-implementation.
-
-## Open questions
-
-Anything genuinely undecided. Don't let these block sign-off if they're not blocking — just
-track them.
-
-## Sign-off
-
-- [ ] Human has read this and understands the *why*, not just the *what*.
-- [ ] Acceptance criteria are specific enough to write failing tests from.
-
-*(Implementation does not start until this box is checked.)*
+This file is kept as a pointer rather than removed, so older links still lead somewhere.
+See `AD-001` in `.specs/STATE.md`.
