@@ -53,15 +53,16 @@ Lightweight decisions live here as `AD-NNN`. Anything hard to reverse gets a ful
 
 
 
+
 Snapshot of where work stopped. Overwrite freely — this is not a log.
 Regenerate with `python scripts/handoff.py`.
 
-- **Feature:** `002-requirement-dictionary-expansion` · phase `validate`
+- **Feature:** `002-requirement-dictionary-expansion` · phase `review`
 - **Branch:** `feat/harness-engineering`
-- **Last commit:** 1be7157 docs(002): record validation iteration 1
-- **Next step:** Gustavo pastes the redacted Lidl (Spain) posting text; then T-005 (fixture + tests/integration/ingestion/test_real_posting.py) closes AC-005, then re-verify
-- **Blockers:** T-005/AC-005 blocked on the real posting text — AC-005a forbids reconstructing it from the term list. Stale scratch git worktree at scratchpad/wt002 awaiting Gustavo's permission to remove.
-- **Uncommitted:** 0 file(s) — clean tree
+- **Last commit:** 1ba7e31 docs(002): record validation iteration 3 — PASS
+- **Next step:** Spec 002 is PASS and complete; open a PR for feat/harness-engineering (needs Gustavo's go-ahead — outward-facing). Then spec 003: migrate specs/features/003-full-document-language-localization.md into .specs/ with EARS AC-NNN criteria before any code.
+- **Blockers:** None for 002. For 003: its spec predates the harness — old specs/ layout, prose criteria 1-6, no AC-NNN IDs, so validate_spec.py cannot read it and the src/** hook will not recognise it as signed off.
+- **Uncommitted:** 1 file(s) — pairing/sessions/2026-08-21-spec-002-first-full-loop.md
 
 ---
 
