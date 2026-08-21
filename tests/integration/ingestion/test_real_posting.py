@@ -59,6 +59,46 @@ def test_the_provenance_header_is_not_extracted_as_posting_text():
     assert len(stripped) < len(raw)
 
 
+# Employer-identifying strings from the original advert. Named here so redaction is a standing
+# sensor rather than a claim: validation iteration 2 correctly pointed out that commit 3acb395's
+# message said the redactions were "assert-checked", when the only assertions were in a one-off
+# generation script that was never committed. Nothing in the repo was guarding this. Now it is —
+# which matters most for a future re-fetch, where the easy mistake is committing raw text.
+REDACTED_IDENTIFIERS = (
+    "Lidl",
+    "lidl",
+    "teamlidl",
+    "683851",  # requisition number
+    "Beat Oriol",  # street address
+    "Montcada i Reixac",
+    "08110",  # postal code
+    "54.800",  # salary band
+    "67.000",
+)
+
+REDACTION_PLACEHOLDERS = ("[EMPRESA]", "[URL]", "[DIRECCIÓN]", "[REFERENCIA]", "[SALARIO]")
+
+
+def test_the_fixture_carries_no_employer_identifying_detail():
+    """AC-005 says *redacted* real posting text, so redaction is part of the criterion rather
+    than a courtesy. Checks the whole file, header included — a leak in the provenance note
+    would be just as public as one in the body."""
+    raw = FIXTURE.read_text(encoding="utf-8")
+
+    for identifier in REDACTED_IDENTIFIERS:
+        assert identifier not in raw, f"{identifier!r} survived redaction in the fixture"
+
+
+def test_the_fixture_shows_where_it_was_redacted():
+    """The other half: absence alone is also what an empty file looks like. The placeholders
+    prove the redaction happened where it should have, and keep the omissions visible to anyone
+    reading the fixture rather than silently rewriting the advert."""
+    raw = FIXTURE.read_text(encoding="utf-8")
+
+    for placeholder in REDACTION_PLACEHOLDERS:
+        assert placeholder in raw, f"expected redaction marker {placeholder!r} is missing"
+
+
 def test_the_real_posting_yields_more_than_one_requirement(extracted: RequirementSet):
     """AC-005, stated as the spec states it. The bar is deliberately also stated a second way:
     'more than one' was true of the broken behaviour plus a single lucky match, so the second
