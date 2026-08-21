@@ -62,15 +62,16 @@ Lightweight decisions live here as `AD-NNN`. Anything hard to reverse gets a ful
 
 
 
+
 Snapshot of where work stopped. Overwrite freely — this is not a log.
 Regenerate with `python scripts/handoff.py`.
 
-- **Feature:** `002-requirement-dictionary-expansion` · phase `review`
-- **Branch:** `feat/harness-engineering`
-- **Last commit:** 1ba7e31 docs(002): record validation iteration 3 — PASS
-- **Next step:** Spec 002 is PASS and complete; open a PR for feat/harness-engineering (needs Gustavo's go-ahead — outward-facing). Then spec 003: migrate specs/features/003-full-document-language-localization.md into .specs/ with EARS AC-NNN criteria before any code.
-- **Blockers:** None for 002. For 003: its spec predates the harness — old specs/ layout, prose criteria 1-6, no AC-NNN IDs, so validate_spec.py cannot read it and the src/** hook will not recognise it as signed off.
-- **Uncommitted:** 1 file(s) — pairing/sessions/2026-08-21-spec-002-first-full-loop.md
+- **Feature:** `003-full-document-language-localization` · phase `design`
+- **Branch:** `spec/003-full-document-language-localization`
+- **Last commit:** c661577 docs(003): re-sign the spec with OQ-4 and OQ-5 resolved
+- **Next step:** Spec 003 is signed off; next phase is Design — architect writes design.md plus an ADR (size large: spans language.py and render_text.py, adds a fourth language, amends signed spec 001). Rebase this branch onto main once PR #7 merges.
+- **Blockers:** None. PR #7 (spec 002 + harness) is open with CI green, awaiting Gustavo's review and merge.
+- **Uncommitted:** 0 file(s) — clean tree
 
 ---
 
