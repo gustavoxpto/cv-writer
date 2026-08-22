@@ -9,7 +9,11 @@ from datetime import datetime, timezone
 
 import pytest
 
-from cv_writer.generation.language import detect_posting_language, resolve_output_language
+from cv_writer.generation.language import (
+    LanguageRefusal,
+    detect_posting_language,
+    resolve_output_language,
+)
 from cv_writer.ingestion.models import Posting
 from cv_writer.profile.models import Identity, Language, Profile
 
@@ -103,6 +107,32 @@ def test_detected_language_below_working_proficiency_is_refused(profile_en_pt):
     resolution = resolve_output_language(german_posting, profile_en_pt, override="german")
 
     assert resolution.allowed is False
+
+
+def test_reason_code_is_not_in_profile_for_a_supported_language_missing_from_the_profile():
+    # German is in SUPPORTED_LANGUAGES, so this stays green once T-003 puts the
+    # SUPPORTED_LANGUAGES gate ahead of the profile check — only the profile-membership
+    # cause can fire here.
+    profile = Profile(
+        identity=Identity(name="Ana Example", email="ana@example.com"),
+        languages=[Language(name="English", proficiency="professional")],
+    )
+    posting = _posting(ENGLISH_POSTING)
+
+    resolution = resolve_output_language(posting, profile, override="german")
+
+    assert resolution.allowed is False
+    assert resolution.reason_code == LanguageRefusal.NOT_IN_PROFILE
+
+
+def test_reason_code_is_below_working_proficiency_for_german_at_basic(profile_en_pt):
+    # profile_en_pt lists German at "basic" — in the profile, but below the working floor.
+    posting = _posting(ENGLISH_POSTING)
+
+    resolution = resolve_output_language(posting, profile_en_pt, override="german")
+
+    assert resolution.allowed is False
+    assert resolution.reason_code == LanguageRefusal.BELOW_WORKING_PROFICIENCY
 
 
 def test_english_posting_is_allowed_at_professional_proficiency(profile_en_pt):

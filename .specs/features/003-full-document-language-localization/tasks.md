@@ -43,7 +43,7 @@ return) so the model shape exists before code returns it.
     fixture fail for an unrelated reason (French is not, and will not become, supported) and make
     the later fix look like the implementer edited a test to force a gate green.
 
-- [ ] **T-002** — Add `LanguageRefusal` and a `reason_code` field on `LanguageResolution`
+- [x] **T-002** — Add `LanguageRefusal` and a `reason_code` field on `LanguageResolution`
   - **Covers:** AC-007
   - **Files:** `src/cv_writer/generation/language.py`, `tests/unit/generation/test_language.py`
   - **Gate:** quick
