@@ -5,35 +5,42 @@ same content with no layout-dependent formatting.
 Deliberately simple, single-section layout for this slice: one "Experience" section listing
 the accepted, validated bullets, plus Education/Skills pulled straight from the profile. This
 is the content render_html.py wraps in the visual print template.
+
+AC-004: the experience/education/skills section headings are looked up from `cv.language` via
+headings.py rather than hardcoded — this module owns no user-visible words of its own (design
+boundary B1; enforced by test_render_text_has_no_hardcoded_headings.py).
 """
 
 from __future__ import annotations
 
 from cv_writer.profile.models import Profile
 
+from .headings import section_headings
 from .models import GeneratedCv
 
 
 def render_markdown(cv: GeneratedCv, profile: Profile) -> str:
     """The full CV as Markdown (criterion 25) — the source both the plain-text variant and
     the PDF template are built from."""
+    headings = section_headings(cv.language)
+
     lines = [f"# {profile.identity.name}"]
     lines.append(_contact_line(profile))
     if profile.identity.links:
         lines.append(" | ".join(f"{name}: {url}" for name, url in profile.identity.links.items()))
 
     lines.append("")
-    lines.append("## Experience")
+    lines.append(f"## {headings.experience}")
     lines.extend(f"- {bullet.text}" for bullet in cv.accepted_bullets)
 
     if profile.education:
         lines.append("")
-        lines.append("## Education")
+        lines.append(f"## {headings.education}")
         lines.extend(f"- {edu.degree}, {edu.institution}" for edu in profile.education)
 
     if profile.skills:
         lines.append("")
-        lines.append("## Skills")
+        lines.append(f"## {headings.skills}")
         lines.append(", ".join(skill.name for skill in profile.skills))
 
     return "\n".join(lines)

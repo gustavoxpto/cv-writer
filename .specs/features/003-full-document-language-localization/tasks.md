@@ -149,7 +149,7 @@ return) so the model shape exists before code returns it.
     `.strip().lower()` before lookup. The module imports nothing from `cv_writer` (design
     boundary B3). `python scripts/gate.py quick` exits 0.
 
-- [ ] **T-007** — `render_markdown()` looks up headings from `cv.language` instead of hardcoding them
+- [x] **T-007** — `render_markdown()` looks up headings from `cv.language` instead of hardcoding them
   - **Covers:** AC-004
   - **Files:** `src/cv_writer/generation/render_text.py`, `tests/unit/generation/test_render_text.py`
   - **Gate:** quick
