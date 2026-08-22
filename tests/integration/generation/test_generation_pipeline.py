@@ -224,3 +224,37 @@ def test_generate_cv_never_raises_on_a_stale_evidence_reference(profile, posting
 
     # No crash — an honest GenerationFailure, since the stale evidence contributes nothing.
     assert isinstance(result, GenerationFailure)
+
+
+def test_generate_cv_never_calls_the_rephraser_for_a_refused_language(posting, match_report):
+    # AC-006 / contract C-009: an unsupported override must be refused before any LLM call --
+    # French is not in SUPPORTED_LANGUAGES and never will be (spec 003 out of scope), and a
+    # profile listing French at "professional" would otherwise *permit* French, so the only
+    # thing that can refuse this request is the SUPPORTED_LANGUAGES capability gate landing
+    # ahead of the Rephraser call, not a profile-support refusal (same reachability reasoning
+    # as test_generate_cv_refuses_a_language_not_in_the_profile, design concern 5).
+    french_profile = Profile(
+        identity=Identity(name="Ana Example", email="ana@example.com"),
+        languages=[Language(name="French", proficiency="professional")],
+        job_histories=[],
+        skills=[],
+    )
+
+    class _RephraserThatMustNeverBeCalled:
+        def rephrase(self, request):
+            # Raised from inside the double, not returned as a value -- this only proves
+            # anything if an AssertionError raised here actually fails the test rather than
+            # being caught and swallowed somewhere in generate_cv()'s own pipeline.
+            raise AssertionError("the LLM was called for a refused language")
+
+    result = generate_cv(
+        profile=french_profile,
+        posting=posting,
+        match_report=match_report,
+        extra_inputs=[],
+        rephraser=_RephraserThatMustNeverBeCalled(),
+        language_override="french",
+    )
+
+    assert isinstance(result, GenerationFailure)
+    assert result.reason

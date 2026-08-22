@@ -218,7 +218,7 @@ return) so the model shape exists before code returns it.
 
 ## Phase 4 — AC-006: the refusal reaches the user before any model call
 
-- [ ] **T-010** — Prove the LLM is never called for a refused language
+- [x] **T-010** — Prove the LLM is never called for a refused language
   - **Covers:** AC-006
   - **Files:** `tests/integration/generation/test_generation_pipeline.py`
   - **Gate:** full
