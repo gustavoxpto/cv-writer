@@ -147,10 +147,10 @@ def test_a_proficiency_level_recognized_by_matching_is_also_recognized_by_genera
 
     profile = Profile(
         identity=Identity(name="Ana Example", email="ana@example.com"),
-        languages=[Language(name="French", proficiency="advanced")],
+        languages=[Language(name="German", proficiency="advanced")],
     )
-    posting = _posting("Nous recherchons.")
+    posting = _posting("Wir suchen.")
 
-    resolution = resolve_output_language(posting, profile, override="french")
+    resolution = resolve_output_language(posting, profile, override="german")
 
     assert resolution.allowed is True

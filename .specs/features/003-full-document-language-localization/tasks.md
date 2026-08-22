@@ -28,7 +28,7 @@ not a fix bundled into the commit that broke it (design concern 1). T-002 (the `
 field) lands before T-003 (the gate that needs a `LanguageRefusal.UNSUPPORTED_LANGUAGE` member to
 return) so the model shape exists before code returns it.
 
-- [ ] **T-001** — Re-arrange the proficiency-vocabulary regression test onto a supported language
+- [x] **T-001** — Re-arrange the proficiency-vocabulary regression test onto a supported language
   - **Covers:** AC-001
   - **Files:** `tests/unit/generation/test_language.py`
   - **Gate:** quick
