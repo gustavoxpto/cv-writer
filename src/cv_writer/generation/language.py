@@ -174,6 +174,22 @@ def resolve_output_language(
     else:
         language = detect_posting_language(posting.raw_text).language
 
+    # Capability before permission (design decision 3): a language this tool has no
+    # structural support for — whether named by the caller's override or resolved from the
+    # posting, including detect_posting_language()'s "unknown" sentinel — is refused here,
+    # before any PT-variant resolution and before the profile even gets asked (AC-001).
+    if language not in SUPPORTED_LANGUAGES:
+        return LanguageResolution(
+            detected=language,
+            variant=None,
+            allowed=False,
+            reason=(
+                f"'{language}' is not a language this tool can generate a CV in "
+                "(criterion 20)"
+            ),
+            reason_code=LanguageRefusal.UNSUPPORTED_LANGUAGE,
+        )
+
     variant = _resolve_pt_variant(posting, pt_terms) if language == "portuguese" else None
 
     allowed, reason, reason_code = _check_profile_supports(language, profile)

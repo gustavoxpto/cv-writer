@@ -135,6 +135,53 @@ def test_reason_code_is_below_working_proficiency_for_german_at_basic(profile_en
     assert resolution.reason_code == LanguageRefusal.BELOW_WORKING_PROFICIENCY
 
 
+def test_override_naming_an_unsupported_language_is_refused_before_profile_check():
+    # French is not in SUPPORTED_LANGUAGES. The profile *would* permit it (professional
+    # proficiency, above MINIMUM_WORKING_RANK), so only the SUPPORTED_LANGUAGES gate can
+    # produce this refusal -- proving capability is checked before permission (design
+    # decision 3), distinct from the reason the profile check would have given for the same
+    # French-at-professional profile if the gate were absent.
+    profile = Profile(
+        identity=Identity(name="Ana Example", email="ana@example.com"),
+        languages=[Language(name="French", proficiency="professional")],
+    )
+    posting = _posting("Nous recherchons un ingénieur.")
+
+    resolution = resolve_output_language(posting, profile, override="french")
+
+    assert resolution.allowed is False
+    assert resolution.reason_code == LanguageRefusal.UNSUPPORTED_LANGUAGE
+
+
+def test_a_posting_with_no_recognizable_language_is_refused_as_unsupported(profile_en_pt):
+    # Zero stopword hits for any SUPPORTED_LANGUAGES entry, no override supplied --
+    # detect_posting_language() resolves to its "unknown" sentinel, which must be refused
+    # through the same SUPPORTED_LANGUAGES gate, not the old "not listed in the profile's
+    # languages" path.
+    posting = _posting("xyz qwerty zzz flononflorp")
+
+    resolution = resolve_output_language(posting, profile_en_pt)
+
+    assert resolution.detected == "unknown"
+    assert resolution.allowed is False
+    assert resolution.reason_code == LanguageRefusal.UNSUPPORTED_LANGUAGE
+
+
+def test_an_allowed_resolution_has_no_reason_code(profile_en_pt):
+    posting = _posting(ENGLISH_POSTING)
+
+    resolution = resolve_output_language(posting, profile_en_pt)
+
+    assert resolution.allowed is True
+    assert resolution.reason_code is None
+
+
+def test_exactly_three_language_refusal_reasons_exist():
+    # len(), not pairwise !=: distinct Enum members are unequal by construction, so a
+    # pairwise-inequality assertion would test enum.Enum, not this module (LESSONS L-007).
+    assert len(LanguageRefusal) == 3
+
+
 def test_english_posting_is_allowed_at_professional_proficiency(profile_en_pt):
     posting = _posting(ENGLISH_POSTING)
 

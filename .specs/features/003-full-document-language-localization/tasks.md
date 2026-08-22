@@ -72,7 +72,7 @@ return) so the model shape exists before code returns it.
     T-003's pin three different members from three different fixtures, so no single hardcoded
     `reason_code` satisfies them all. `python scripts/gate.py quick` exits 0.
 
-- [ ] **T-003** — Gate `resolve_output_language()` on `SUPPORTED_LANGUAGES` before the profile check
+- [x] **T-003** — Gate `resolve_output_language()` on `SUPPORTED_LANGUAGES` before the profile check
   - **Covers:** AC-001, AC-007
   - **Files:** `src/cv_writer/generation/language.py`, `tests/unit/generation/test_language.py`
   - **Gate:** quick
