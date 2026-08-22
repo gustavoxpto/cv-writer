@@ -232,7 +232,7 @@ return) so the model shape exists before code returns it.
     `generate_cv()` (design boundary B2) as a sensor, not new behaviour.
     `python scripts/gate.py full` exits 0.
 
-- [ ] **T-011** — Prove the refusal reaches the user through the web re-render path
+- [x] **T-011** — Prove the refusal reaches the user through the web re-render path
   - **Covers:** AC-006
   - **Files:** `tests/unit/web/test_language_refusal_reaches_the_user.py`
   - **Gate:** build
