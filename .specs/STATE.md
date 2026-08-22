@@ -64,15 +64,16 @@ Lightweight decisions live here as `AD-NNN`. Anything hard to reverse gets a ful
 
 
 
+
 Snapshot of where work stopped. Overwrite freely — this is not a log.
 Regenerate with `python scripts/handoff.py`.
 
-- **Feature:** `003-full-document-language-localization` · phase `tasks`
+- **Feature:** `003-full-document-language-localization` · phase `review`
 - **Branch:** `spec/003-full-document-language-localization`
-- **Last commit:** 90333dc docs(003): amend AC-001, add AC-007, re-sign after design
-- **Next step:** Tasks phase: break spec 003 into atomic tasks (task-planner), then Contract. Note the French-fixture test re-arrangement wants its own commit with the reasoning in the message.
-- **Blockers:** None. Spec 003 signed off with AC-001..AC-007, design.md and ADR 0006 complete.
-- **Uncommitted:** 0 file(s) — clean tree
+- **Last commit:** e84d3ae docs(003): add the pr body, pairing note and lesson L-008
+- **Next step:** PR #8 is open against main (https://github.com/gustavoxpto/cv-writer/pull/8) and awaits human review; merge with `gh pr merge --merge` so the eleven atomic task commits survive. After merge, run the real end-to-end check against a Spanish posting — the 2026-08-19 run that produced English headings over Spanish bullets is the thing this slice exists to fix. OQ-2 (native-speaker read of the PT/DE/ES heading translations) and OQ-3 (BCP-47 `lang` attribute) remain open and non-blocking.
+- **Blockers:** none
+- **Uncommitted:** 2 file(s) — .specs/features/003-full-document-language-localization/_scratch_probe.txt, docs/roadmap-2026-08-22.md
 
 ---
 
