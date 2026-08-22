@@ -39,7 +39,7 @@ this list must go back into the spec first — it does not get added at validati
 
 Each item is one observable outcome. Not a task, not a file — an outcome someone else can check.
 
-- [ ] **C-001** — Requesting generation with an `override` naming a language absent from
+- [x] **C-001** — Requesting generation with an `override` naming a language absent from
   `SUPPORTED_LANGUAGES` is refused, and the refusal fires before the profile-proficiency check
   and before PT-variant resolution, for a language a shipped profile can genuinely still name
   (French).
@@ -53,7 +53,7 @@ Each item is one observable outcome. Not a task, not a file — an outcome someo
     reachable without either of those running (capability checked before permission, per design
     decision 3). `python scripts/gate.py quick` exits 0.
 
-- [ ] **C-002** — A posting `detect_posting_language()` resolves to `"unknown"` (zero stopword
+- [x] **C-002** — A posting `detect_posting_language()` resolves to `"unknown"` (zero stopword
   hits, no override supplied) is refused through the same `SUPPORTED_LANGUAGES` gate as an
   unsupported override, not through the pre-existing "not listed in the profile's languages"
   path.
@@ -64,7 +64,7 @@ Each item is one observable outcome. Not a task, not a file — an outcome someo
     `reason_code == LanguageRefusal.UNSUPPORTED_LANGUAGE` (not `NOT_IN_PROFILE`).
     `python scripts/gate.py quick` exits 0.
 
-- [ ] **C-003** — A refused `LanguageResolution` carries a machine-readable `reason_code`
+- [x] **C-003** — A refused `LanguageResolution` carries a machine-readable `reason_code`
   identifying which of the three refusal causes applied, and the three causes are
   distinguishable without asserting on prose, while the existing prose `reason` stays
   populated for the callers that already render it.
@@ -92,7 +92,7 @@ Each item is one observable outcome. Not a task, not a file — an outcome someo
     tests `enum.Enum`'s semantics, not this module); assert `len(LanguageRefusal) == 3`
     instead. `python scripts/gate.py quick` exits 0.
 
-- [ ] **C-004** — Spanish is a supported language: detected the same flat way as the other three,
+- [x] **C-004** — Spanish is a supported language: detected the same flat way as the other three,
   with no PT-PT/PT-BR-style variant, and its stopword set shares no member with English's,
   Portuguese's or German's.
   - **Verifies:** AC-002
@@ -105,7 +105,7 @@ Each item is one observable outcome. Not a task, not a file — an outcome someo
     `SUPPORTED_LANGUAGES["spanish"] & SUPPORTED_LANGUAGES[lang] == set()` for each of
     `"english"`, `"portuguese"`, `"german"` in turn. `python scripts/gate.py quick` exits 0.
 
-- [ ] **C-005** — The profile-proficiency gate (`_check_profile_supports()` against
+- [x] **C-005** — The profile-proficiency gate (`_check_profile_supports()` against
   `MINIMUM_WORKING_RANK`) applies identically to Spanish as to the other three supported
   languages, with no special-casing in the production code.
   - **Verifies:** AC-003
@@ -118,7 +118,7 @@ Each item is one observable outcome. Not a task, not a file — an outcome someo
     `src/cv_writer/generation/language.py::_check_profile_supports()` has no `if language ==
     "spanish"` (or equivalent) branch. `python scripts/gate.py build` exits 0.
 
-- [ ] **C-006** — A CV rendered with a given `cv.language` carries that language's experience,
+- [x] **C-006** — A CV rendered with a given `cv.language` carries that language's experience,
   education and skills section headings; no non-English render emits an English heading; the
   English render is byte-for-byte what it emits today; and `render_plain_text()` carries the
   non-English headings through with Markdown markers stripped.
@@ -156,7 +156,7 @@ Each item is one observable outcome. Not a task, not a file — an outcome someo
     the first half alone passes on the un-stripped Markdown. `python scripts/gate.py quick`
     exits 0.
 
-- [ ] **C-007** — `render_text.py` contains no user-visible word of its own — every heading
+- [x] **C-007** — `render_text.py` contains no user-visible word of its own — every heading
   string a reader of the CV would see comes from `headings.py` — and this is enforced by a build
   sensor rather than left to reviewer attention.
   - **Verifies:** AC-004
@@ -170,7 +170,7 @@ Each item is one observable outcome. Not a task, not a file — an outcome someo
     actually catches what it claims to, and a guard asserting the scan looked at a real,
     non-empty file. `python scripts/gate.py build` exits 0.
 
-- [ ] **C-008** — Spec 001's criterion 26 no longer reads as a mandate for the literal English
+- [x] **C-008** — Spec 001's criterion 26 no longer reads as a mandate for the literal English
   words "Experience", "Education", "Skills" regardless of output language, the criterion itself
   still exists (amended, not deleted), and the amendment is recorded as a dated entry in that
   spec's own Revision log.
@@ -189,7 +189,7 @@ Each item is one observable outcome. Not a task, not a file — an outcome someo
     `"criterion 26"` (case-insensitive) and `"003"`; (4) the file path exists and both halves are
     non-empty. `python scripts/gate.py build` exits 0.
 
-- [ ] **C-009** — Generation requested for a language absent from `SUPPORTED_LANGUAGES` never
+- [x] **C-009** — Generation requested for a language absent from `SUPPORTED_LANGUAGES` never
   reaches the `Rephraser`, and returns a `GenerationFailure` carrying a non-empty reason.
   - **Verifies:** AC-006
   - **Check:** In `tests/integration/generation/test_generation_pipeline.py`, a new test defines a
@@ -201,7 +201,7 @@ Each item is one observable outcome. Not a task, not a file — an outcome someo
     `AssertionError` raised from inside it would fail the test rather than being swallowed.
     `python scripts/gate.py full` exits 0.
 
-- [ ] **C-010** — When a user submits a generation request for a refused language through the
+- [x] **C-010** — When a user submits a generation request for a refused language through the
   web UI, the HTTP response reports the refusal (422) with the reason text visible in the
   response body, without a server error.
   - **Verifies:** AC-006
