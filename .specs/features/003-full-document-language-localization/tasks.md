@@ -47,16 +47,30 @@ return) so the model shape exists before code returns it.
   - **Covers:** AC-007
   - **Files:** `src/cv_writer/generation/language.py`, `tests/unit/generation/test_language.py`
   - **Gate:** quick
-  - **Done when:** a new failing test (added first) asserts
-    `resolve_output_language(...).reason_code == LanguageRefusal.NOT_IN_PROFILE` for a language
-    absent from the profile's `languages`, and a second asserts
-    `LanguageRefusal.BELOW_WORKING_PROFICIENCY` for a language present below the working-proficiency
-    floor; both go green once `LanguageRefusal(str, Enum)` (three members:
-    `UNSUPPORTED_LANGUAGE`, `NOT_IN_PROFILE`, `BELOW_WORKING_PROFICIENCY`) is added and
-    `_check_profile_supports()` returns the matching member alongside its existing `(bool, reason)`
-    pair; `LanguageResolution.reason_code: LanguageRefusal | None = None` is added and existing
-    callers of `LanguageResolution(...)` need no changes (default `None`). A test also asserts the
-    three members are pairwise not equal. `python scripts/gate.py quick` exits 0.
+  - **Done when:** two new failing tests (added first) assert, for a profile with no German
+    entry, `resolve_output_language(..., override="german").reason_code ==
+    LanguageRefusal.NOT_IN_PROFILE`, and for a profile listing German at `"basic"`,
+    `== LanguageRefusal.BELOW_WORKING_PROFICIENCY`. Both fixtures use German deliberately:
+    German is in `SUPPORTED_LANGUAGES`, so these two tests stay green when T-003 puts the
+    capability gate *ahead* of the profile check. A fixture on an unsupported language would
+    pass here and flip to `UNSUPPORTED_LANGUAGE` one task later, turning T-002's own tests red
+    inside T-003's commit. They go green once `LanguageRefusal(str, Enum)` (three members:
+    `UNSUPPORTED_LANGUAGE`, `NOT_IN_PROFILE`, `BELOW_WORKING_PROFICIENCY`) is added,
+    `_check_profile_supports()` returns the matching member alongside its existing
+    `(bool, reason)` pair, `LanguageResolution.reason_code: LanguageRefusal | None = None` is
+    added, **and** `resolve_output_language()`'s single `LanguageResolution(...)` construction
+    (`language.py:169` today) passes that member through. That call site must change: it is the
+    only construction site in `src/`, so leaving it alone means `reason_code` is `None` on every
+    refusal and AC-007 cannot be discharged (contract C-003 — an earlier draft of this task and
+    of C-003 forbade exactly the edit the criterion requires). The field defaults to `None` so
+    no *other* construction site would need changing; there is no other one today. The prose
+    `reason` stays populated alongside `reason_code` — `generation/pipeline.py:52` reads it and
+    `draft.html.jinja:69` renders it, so it is added to, not replaced. Assert
+    `len(LanguageRefusal) == 3` rather than that the members are pairwise unequal: distinct
+    `Enum` members are unequal by construction, so that assertion tests `enum.Enum` and not this
+    module (`.specs/LESSONS.md` L-007). The real discrimination is that these two tests plus
+    T-003's pin three different members from three different fixtures, so no single hardcoded
+    `reason_code` satisfies them all. `python scripts/gate.py quick` exits 0.
 
 - [ ] **T-003** — Gate `resolve_output_language()` on `SUPPORTED_LANGUAGES` before the profile check
   - **Covers:** AC-001, AC-007
@@ -116,28 +130,46 @@ return) so the model shape exists before code returns it.
   - **Files:** `src/cv_writer/generation/headings.py`, `tests/unit/generation/test_headings.py`
   - **Gate:** quick
   - **Done when:** a new test file, written first (all red against a nonexistent module),
-    asserts: `section_headings("english")`, `("portuguese")`, `("german")`, `("spanish")` each
-    return a `SectionHeadings` with non-empty `experience`/`education`/`skills` string fields;
+    asserts: `section_headings("english")` returns exactly `"Experience"`, `"Education"` and
+    `"Skills"` — today's rendered output pinned byte-for-byte, so the English CV cannot drift
+    while the other three languages are added (contract C-006; nothing else in the suite pins
+    these, as the `## Experience` strings elsewhere under `tests/` are hand-written Markdown
+    *inputs* to `render_html`/`page_fit`, never assertions on `render_markdown()`'s output);
+    `("portuguese")`, `("german")` and `("spanish")` each return non-empty
+    `experience`/`education`/`skills` fields, none equal to the corresponding English field;
+    `section_headings("English") == section_headings("english")`, because `GeneratedCv.language`
+    is a free `str` and a capitalized value must not raise;
     `set(SECTION_HEADINGS) == set(cv_writer.generation.language.SUPPORTED_LANGUAGES)`; and
     `section_headings("french")` raises `ValueError` naming "french" and the supported set (not a
-    silent English fallback, design decision 4, `.specs/LESSONS.md` L-004). All four pass once
+    silent English fallback, design decision 4, `.specs/LESSONS.md` L-004). All pass once
     `headings.py` is added: a frozen `SectionHeadings(BaseModel)`, a `SECTION_HEADINGS: dict[str,
     SectionHeadings]` with one entry per supported language (English/Portuguese/German/Spanish
     headings per the design's draft translations, OQ-2 not yet resolved, translations may need a
-    later one-line correction), and `section_headings(language)`. The module imports nothing from
-    `cv_writer` (design boundary B3). `python scripts/gate.py quick` exits 0.
+    later one-line correction), and `section_headings(language)` normalizing its argument with
+    `.strip().lower()` before lookup. The module imports nothing from `cv_writer` (design
+    boundary B3). `python scripts/gate.py quick` exits 0.
 
 - [ ] **T-007** — `render_markdown()` looks up headings from `cv.language` instead of hardcoding them
   - **Covers:** AC-004
   - **Files:** `src/cv_writer/generation/render_text.py`, `tests/unit/generation/test_render_text.py`
   - **Gate:** quick
-  - **Done when:** a new test file (`render_markdown()` has no unit test today), written first, is
-    red against the current hardcoded "## Experience"/"## Education"/"## Skills": a parametrized
-    render test over all four languages asserts the rendered Markdown contains that language's
-    `section_headings(...).experience/.education/.skills` and does not contain the English words
-    for any non-English case; a separate test asserts `render_plain_text()` for a non-English
-    `GeneratedCv` contains the same non-English heading words with the `#`/`-` markers stripped
-    (inheritance, not a re-implementation). Both go green once `render_markdown()` calls
+  - **Done when:** a new test file (`render_markdown()` has no unit test today), written first,
+    is red against the current hardcoded "## Experience"/"## Education"/"## Skills". It builds
+    one shared fixture — profile and `GeneratedCv` — whose *profile-authored* content (name,
+    email, one `education` entry, one `skills` entry, one accepted bullet) contains none of the
+    words "Experience", "Education", "Skills", pinned in the test file rather than imported. It
+    has: a parametrized test over all four languages asserting the render contains the line
+    `f"## {section_headings(lang).experience}"` and likewise for `.education` and `.skills`; for
+    the three non-English ids, an assertion that no line of the render starting with `"## "`
+    contains "Experience", "Education" or "Skills" — scoped to heading lines because the
+    document also carries profile-authored content the spec keeps verbatim, so an unscoped
+    substring check would go red on an English bullet or skill name rather than on a heading
+    (contract C-006); and an English regression test asserting the render still contains
+    "## Experience", "## Education" and "## Skills" exactly. A separate test asserts
+    `render_plain_text()` on a non-English `GeneratedCv` contains each heading word *and* that
+    `"## " + heading` is absent — the second half is the one that can actually fail if the
+    markers are not stripped, since the first half alone passes on un-stripped Markdown
+    (inheritance, not a re-implementation). All go green once `render_markdown()` calls
     `section_headings(cv.language)` and uses its three fields instead of the literal strings.
     `render_markdown(cv, profile)`'s signature is unchanged (design decision 2).
     `python scripts/gate.py quick` exits 0.
