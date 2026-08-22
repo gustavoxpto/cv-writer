@@ -108,7 +108,7 @@ return) so the model shape exists before code returns it.
     untouched, no test asserts English/German/Portuguese are mutually disjoint, only that Spanish
     is disjoint from each. `python scripts/gate.py quick` exits 0.
 
-- [ ] **T-005** — Parametrize the profile-proficiency gate over all four supported languages
+- [x] **T-005** — Parametrize the profile-proficiency gate over all four supported languages
   - **Covers:** AC-003
   - **Files:** `tests/unit/generation/test_language.py`
   - **Gate:** build

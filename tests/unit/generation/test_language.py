@@ -263,3 +263,38 @@ def test_spanish_posting_with_no_country_has_no_pt_variant(profile_en_pt):
 def test_spanish_stopwords_share_no_member_with_the_other_supported_languages(other_language):
     assert SUPPORTED_LANGUAGES["spanish"] & SUPPORTED_LANGUAGES[other_language] == set()
 
+@pytest.mark.parametrize("language", ["english", "portuguese", "german", "spanish"])
+def test_profile_proficiency_gate_allows_working_proficiency_for_every_supported_language(
+    language,
+):
+    # One parametrized body over all four supported languages (AC-003): the
+    # profile-proficiency gate applies identically, with no special-casing for Spanish —
+    # Spanish already goes through the same _check_profile_supports() path as the other
+    # three once T-004 landed.
+    profile = Profile(
+        identity=Identity(name="Ana Example", email="ana@example.com"),
+        languages=[Language(name=language, proficiency="professional")],
+    )
+    posting = _posting("placeholder posting text, irrelevant under override")
+
+    resolution = resolve_output_language(posting, profile, override=language)
+
+    assert resolution.allowed is True
+    assert resolution.reason_code is None
+
+
+@pytest.mark.parametrize("language", ["english", "portuguese", "german", "spanish"])
+def test_profile_proficiency_gate_refuses_basic_proficiency_for_every_supported_language(
+    language,
+):
+    profile = Profile(
+        identity=Identity(name="Ana Example", email="ana@example.com"),
+        languages=[Language(name=language, proficiency="basic")],
+    )
+    posting = _posting("placeholder posting text, irrelevant under override")
+
+    resolution = resolve_output_language(posting, profile, override=language)
+
+    assert resolution.allowed is False
+    assert resolution.reason_code == LanguageRefusal.BELOW_WORKING_PROFICIENCY
+
