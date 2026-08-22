@@ -10,10 +10,10 @@ superseded and add the new one. `## Current` and `## Handoff` are snapshots and 
 
 ## Current
 
-- **Feature:** 002-requirement-dictionary-expansion
+- **Feature:** 003-full-document-language-localization
 - **Phase:** review
-- **Spec status:** signed-off (Gustavo, 2026-08-20)
-- **Branch:** `feat/harness-engineering`
+- **Spec status:** signed-off (Gustavo, 2026-08-21, re-signed after migration and again after design amendments R-1/R-2)
+- **Branch:** `spec/003-full-document-language-localization`
 
 <!--
 Phase is one of: idle | specify | design | tasks | contract | execute | validate | review
@@ -41,6 +41,14 @@ Lightweight decisions live here as `AD-NNN`. Anything hard to reverse gets a ful
 - **AD-004** (2026-08-20) — Blocking hooks over warning hooks. A warning that can be ignored is
   feed-forward wearing a sensor's clothes. Every blocking hook prints its own bypass instructions
   and logs the bypass below, so the escape hatch stays honest.
+- **AD-004** (2026-08-21) — Spec 003 was migrated into `.specs/` and re-expressed in EARS rather
+  than implemented from its 2026-08-19 form. The old form uses prose criteria 1-6 in the legacy
+  `specs/` layout, which `validate_spec.py` cannot parse and the `src/**` hook cannot recognise as
+  signed off, so implementing from it would have meant bypassing both gates on the first feature
+  after the harness proved itself. The original file stays on branch
+  `feat/003-full-document-language-localization` as the historical record — same treatment AD-001
+  gives spec 001, and no deletion. Sign-off restarts because the criterion IDs are new; the
+  substantive decisions from 2026-08-19, including OQ-1, carry over unchanged.
 
 ---
 
@@ -54,15 +62,18 @@ Lightweight decisions live here as `AD-NNN`. Anything hard to reverse gets a ful
 
 
 
+
+
+
 Snapshot of where work stopped. Overwrite freely — this is not a log.
 Regenerate with `python scripts/handoff.py`.
 
-- **Feature:** `002-requirement-dictionary-expansion` · phase `review`
-- **Branch:** `feat/harness-engineering`
-- **Last commit:** 1ba7e31 docs(002): record validation iteration 3 — PASS
-- **Next step:** Spec 002 is PASS and complete; open a PR for feat/harness-engineering (needs Gustavo's go-ahead — outward-facing). Then spec 003: migrate specs/features/003-full-document-language-localization.md into .specs/ with EARS AC-NNN criteria before any code.
-- **Blockers:** None for 002. For 003: its spec predates the harness — old specs/ layout, prose criteria 1-6, no AC-NNN IDs, so validate_spec.py cannot read it and the src/** hook will not recognise it as signed off.
-- **Uncommitted:** 1 file(s) — pairing/sessions/2026-08-21-spec-002-first-full-loop.md
+- **Feature:** `003-full-document-language-localization` · phase `review`
+- **Branch:** `spec/003-full-document-language-localization`
+- **Last commit:** e84d3ae docs(003): add the pr body, pairing note and lesson L-008
+- **Next step:** PR #8 is open against main (https://github.com/gustavoxpto/cv-writer/pull/8) and awaits human review; merge with `gh pr merge --merge` so the eleven atomic task commits survive. After merge, run the real end-to-end check against a Spanish posting — the 2026-08-19 run that produced English headings over Spanish bullets is the thing this slice exists to fix. OQ-2 (native-speaker read of the PT/DE/ES heading translations) and OQ-3 (BCP-47 `lang` attribute) remain open and non-blocking.
+- **Blockers:** none
+- **Uncommitted:** 2 file(s) — .specs/features/003-full-document-language-localization/_scratch_probe.txt, docs/roadmap-2026-08-22.md
 
 ---
 

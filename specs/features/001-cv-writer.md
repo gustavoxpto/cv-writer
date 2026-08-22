@@ -149,8 +149,11 @@ Numbered and testable. Every test in `tests/` must cite one of these numbers.
       recruiter, and never fails a contrast check.)
     - **ATS-safe structure:** single column, no text boxes, no tables or multi-column layout used
       for positioning, no headers/footers carrying content, no icons or images conveying
-      information, no text inside graphics, standard section headings (Experience, Education,
-      Skills), real bullet characters, and dates in a single consistent machine-readable format.
+      information, no text inside graphics, a small number of clearly-labelled,
+      consistently-named sections (illustrative English example: Experience, Education, Skills —
+      the actual wording follows the document's output language; see spec 003, criterion 26
+      amendment), real bullet characters, and dates in a single consistent machine-readable
+      format.
     - **Fonts:** one widely available, screen-and-print legible family from a documented
       shortlist (e.g. Arial/Helvetica, Georgia, Calibri, Verdana, Times New Roman), embedded in
       the PDF, at a minimum body size of 10pt — no decorative, condensed, or exotic faces, and no
@@ -293,6 +296,16 @@ Tracked, not blocking sign-off.
   treated as distinct from PT-BR (criteria 20–21), and one page is the target with a two-page
   option the human chooses (criterion 24). Criteria renumbered from 31 to 37; no tests existed yet
   to re-point.
+
+- **2026-08-22, amending criterion 26 (spec 003).** Criterion 26's ATS-safe-structure bullet
+  reworded, not deleted (hard rule #1): the parenthetical "standard section headings
+  (Experience, Education, Skills)" — the superseded wording, quoted verbatim here — read as a
+  mandate for those literal English words regardless of output language. It now reads as an
+  illustrative English example of the underlying ATS-safe pattern: a small number of
+  clearly-labelled, consistently-named sections. Prompted by
+  `.specs/features/003-full-document-language-localization/spec.md` (AC-005), which found the
+  original wording contradicted a non-English CV using translated section headings, which spec
+  003 requires (criterion 26 itself still stands; only its ATS-safe-structure bullet changed).
 
 ## Sign-off
 

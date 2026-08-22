@@ -12,6 +12,7 @@ deliberately narrow rather than growing into general-purpose language identifica
 from __future__ import annotations
 
 import re
+from enum import Enum
 
 from pydantic import BaseModel
 
@@ -67,6 +68,24 @@ SUPPORTED_LANGUAGES: dict[str, set[str]] = {
         "suchen",
         "unser",
     },
+    "spanish": {
+        "el",
+        "la",
+        "los",
+        "las",
+        "una",
+        "con",
+        "trabajo",
+        "empresa",
+        "buscamos",
+        "tenemos",
+        "nuestro",
+        "nuestra",
+        "usted",
+        "experiencia",
+        "equipo",
+        "puesto",
+    },
 }
 
 # Minimum "working" proficiency rank (criterion 20's floor) — anything below this refuses
@@ -103,6 +122,15 @@ _COUNTRY_TO_VARIANT: dict[str, str] = {
 _WORD_PATTERN = re.compile(r"\w+", re.UNICODE)
 
 
+class LanguageRefusal(str, Enum):
+    """Machine-readable cause of a refused LanguageResolution (AC-007) — lets a caller
+    branch on which of the three refusal causes applied without asserting on prose."""
+
+    UNSUPPORTED_LANGUAGE = "unsupported_language"
+    NOT_IN_PROFILE = "not_in_profile"
+    BELOW_WORKING_PROFICIENCY = "below_working_proficiency"
+
+
 class LanguageDetection(BaseModel):
     """What language a posting's text looks like, and how confident that guess is."""
 
@@ -117,6 +145,7 @@ class LanguageResolution(BaseModel):
     variant: str | None
     allowed: bool
     reason: str | None = None
+    reason_code: LanguageRefusal | None = None
 
 
 def detect_posting_language(raw_text: str) -> LanguageDetection:
@@ -163,10 +192,32 @@ def resolve_output_language(
     else:
         language = detect_posting_language(posting.raw_text).language
 
+    # Capability before permission (design decision 3): a language this tool has no
+    # structural support for — whether named by the caller's override or resolved from the
+    # posting, including detect_posting_language()'s "unknown" sentinel — is refused here,
+    # before any PT-variant resolution and before the profile even gets asked (AC-001).
+    if language not in SUPPORTED_LANGUAGES:
+        return LanguageResolution(
+            detected=language,
+            variant=None,
+            allowed=False,
+            reason=(
+                f"'{language}' is not a language this tool can generate a CV in "
+                "(criterion 20)"
+            ),
+            reason_code=LanguageRefusal.UNSUPPORTED_LANGUAGE,
+        )
+
     variant = _resolve_pt_variant(posting, pt_terms) if language == "portuguese" else None
 
-    allowed, reason = _check_profile_supports(language, profile)
-    return LanguageResolution(detected=language, variant=variant, allowed=allowed, reason=reason)
+    allowed, reason, reason_code = _check_profile_supports(language, profile)
+    return LanguageResolution(
+        detected=language,
+        variant=variant,
+        allowed=allowed,
+        reason=reason,
+        reason_code=reason_code,
+    )
 
 
 def _resolve_pt_variant(posting: Posting, pt_terms: PtPtTermList | None) -> str | None:
@@ -189,16 +240,26 @@ def _resolve_pt_variant(posting: Posting, pt_terms: PtPtTermList | None) -> str 
     return None  # genuinely ambiguous — surfaced to the user, never guessed (criterion 20)
 
 
-def _check_profile_supports(language: str, profile: Profile) -> tuple[bool, str | None]:
+def _check_profile_supports(
+    language: str, profile: Profile
+) -> tuple[bool, str | None, LanguageRefusal | None]:
     for profile_language in profile.languages:
         if profile_language.name.strip().lower() != language:
             continue
         rank = _proficiency_rank(profile_language.proficiency)
         if rank >= MINIMUM_WORKING_RANK:
-            return True, None
-        return False, (
-            f"'{language}' is in the profile only at '{profile_language.proficiency}' "
-            "proficiency, below the working-proficiency floor (criterion 20)"
+            return True, None, None
+        return (
+            False,
+            (
+                f"'{language}' is in the profile only at '{profile_language.proficiency}' "
+                "proficiency, below the working-proficiency floor (criterion 20)"
+            ),
+            LanguageRefusal.BELOW_WORKING_PROFICIENCY,
         )
 
-    return False, f"'{language}' is not listed in the profile's languages (criterion 20)"
+    return (
+        False,
+        f"'{language}' is not listed in the profile's languages (criterion 20)",
+        LanguageRefusal.NOT_IN_PROFILE,
+    )
