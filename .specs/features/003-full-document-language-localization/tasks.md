@@ -174,7 +174,7 @@ return) so the model shape exists before code returns it.
     `render_markdown(cv, profile)`'s signature is unchanged (design decision 2).
     `python scripts/gate.py quick` exits 0.
 
-- [ ] **T-008** — Architectural sensor: `render_text.py` owns no user-visible words
+- [x] **T-008** — Architectural sensor: `render_text.py` owns no user-visible words
   - **Covers:** AC-004
   - **Files:** `tests/unit/generation/test_render_text_has_no_hardcoded_headings.py`
   - **Gate:** build
