@@ -125,7 +125,7 @@ return) so the model shape exists before code returns it.
 
 ## Phase 2 — Rendering: headings follow the resolved language
 
-- [ ] **T-006** — Add `generation/headings.py`: a language-keyed `SectionHeadings` mapping
+- [x] **T-006** — Add `generation/headings.py`: a language-keyed `SectionHeadings` mapping
   - **Covers:** AC-004
   - **Files:** `src/cv_writer/generation/headings.py`, `tests/unit/generation/test_headings.py`
   - **Gate:** quick
