@@ -54,3 +54,13 @@ Format: `L-NNN — <rule>. **Because:** <the actual failure that produced it>.`
   so the marker has to be recognised to flip the zone back. Ask of every new test: what would
   make this fail?
   (spec 002, `tests/unit/ingestion/test_requirement_sections.py`)
+
+- **L-008** — A test asserting a transformed value is *present* can pass when the transform never
+  ran, if the untransformed output already contains that value in another form. Pair every
+  positive assertion (the value is present) with a negative one on what only the transform could
+  produce (e.g., `"## " + heading` absent, when the transform is stripping Markdown markers).
+  **Because:** a test for "heading word appears with markers stripped" passed on un-stripped
+  Markdown containing the same words, so the stripping could have been disabled and the test
+  stayed green. The "word present" half alone cannot distinguish transform-worked from
+  transform-never-ran when the input already contains the value.
+  (spec 003 validation mutation #5, `pairing/sessions/2026-08-22-spec-003-full-document-language-localization.md`)
