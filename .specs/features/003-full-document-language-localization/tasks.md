@@ -190,7 +190,7 @@ return) so the model shape exists before code returns it.
 
 ## Phase 3 — Amend spec 001's criterion 26
 
-- [ ] **T-009** — Amend criterion 26's ATS bullet and add the dated Revision-log entry, with its sensor
+- [x] **T-009** — Amend criterion 26's ATS bullet and add the dated Revision-log entry, with its sensor
   - **Covers:** AC-005
   - **Files:** `specs/features/001-cv-writer.md`, `tests/unit/scripts/test_spec_001_criterion_26_amendment.py`
   - **Gate:** build
