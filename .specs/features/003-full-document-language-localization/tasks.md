@@ -93,7 +93,7 @@ return) so the model shape exists before code returns it.
     `SUPPORTED_LANGUAGES`. All pre-existing tests in the file (including T-001's rearranged one)
     stay green. `python scripts/gate.py quick` exits 0.
 
-- [ ] **T-004** — Add Spanish to `SUPPORTED_LANGUAGES`, disjoint from the other three
+- [x] **T-004** — Add Spanish to `SUPPORTED_LANGUAGES`, disjoint from the other three
   - **Covers:** AC-002
   - **Files:** `src/cv_writer/generation/language.py`, `tests/unit/generation/test_language.py`
   - **Gate:** quick

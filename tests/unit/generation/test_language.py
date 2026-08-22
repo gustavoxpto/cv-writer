@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 import pytest
 
 from cv_writer.generation.language import (
+    SUPPORTED_LANGUAGES,
     LanguageRefusal,
     detect_posting_language,
     resolve_output_language,
@@ -24,6 +25,13 @@ ENGLISH_POSTING = (
 PORTUGUESE_POSTING = (
     "Procuramos um engenheiro backend sénior para se juntar à nossa equipa. O candidato "
     "ideal tem experiência com Python e sistemas distribuídos."
+)
+# Deliberately avoids "para", "com", "somos", "candidato" — words the Portuguese stopword
+# set also carries — so this posting can only score on Spanish-only vocabulary (design
+# decision 5, T-004).
+SPANISH_POSTING = (
+    "Buscamos un ingeniero de software con experiencia en Python. Nuestro equipo necesita "
+    "un profesional con dedicación y compromiso. Ofrecemos un buen ambiente de trabajo."
 )
 
 
@@ -231,3 +239,27 @@ def test_a_proficiency_level_recognized_by_matching_is_also_recognized_by_genera
     resolution = resolve_output_language(posting, profile, override="german")
 
     assert resolution.allowed is True
+
+
+def test_spanish_posting_detected_as_spanish_with_high_confidence():
+    detection = detect_posting_language(SPANISH_POSTING)
+
+    assert detection.language == "spanish"
+    assert detection.confidence == "high"
+
+
+def test_spanish_posting_with_no_country_has_no_pt_variant(profile_en_pt):
+    # Spanish has no PT-PT/PT-BR-style variant mechanism (spec's Out of scope) — variant is
+    # always None for a non-Portuguese language, regardless of country.
+    posting = _posting(SPANISH_POSTING)
+
+    resolution = resolve_output_language(posting, profile_en_pt)
+
+    assert resolution.detected == "spanish"
+    assert resolution.variant is None
+
+
+@pytest.mark.parametrize("other_language", ["english", "portuguese", "german"])
+def test_spanish_stopwords_share_no_member_with_the_other_supported_languages(other_language):
+    assert SUPPORTED_LANGUAGES["spanish"] & SUPPORTED_LANGUAGES[other_language] == set()
+

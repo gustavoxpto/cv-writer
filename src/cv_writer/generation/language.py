@@ -68,6 +68,24 @@ SUPPORTED_LANGUAGES: dict[str, set[str]] = {
         "suchen",
         "unser",
     },
+    "spanish": {
+        "el",
+        "la",
+        "los",
+        "las",
+        "una",
+        "con",
+        "trabajo",
+        "empresa",
+        "buscamos",
+        "tenemos",
+        "nuestro",
+        "nuestra",
+        "usted",
+        "experiencia",
+        "equipo",
+        "puesto",
+    },
 }
 
 # Minimum "working" proficiency rank (criterion 20's floor) — anything below this refuses
